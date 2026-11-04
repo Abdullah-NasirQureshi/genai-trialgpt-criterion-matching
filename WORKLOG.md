@@ -72,3 +72,9 @@
     name, university, student ID, video link.
 24. Wrote `README.md` (setup, start the app, reproduce every experiment, repo map) and `src/check_tex.py`, a checker that
     catches LaTeX mistakes without a compiler (unbalanced braces, missing citations/labels, figures never discussed).
+25. **LoRA run 2 (class-balanced) finished** (rank 16, 2 epochs, 31 min). Validation: accuracy 0.733, macro-F1 **0.534**
+    (run 1: 0.728 / 0.467). The balanced model now predicts "not enough information" and "not applicable" for exclusion
+    criteria (exclusion macro-F1 0.377 -> 0.567); inclusion is unchanged. Chosen as the **final adapter** using
+    VALIDATION only (copied to `results/lora_final/`). Test set still untouched.
+26. Started fine-tuning the small 0.5B **draft** model with the same recipe (it will agree with the big model more often
+    than the untuned draft, which is what speculative decoding needs).
