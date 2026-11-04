@@ -15,6 +15,11 @@ import tempfile
 import time
 from pathlib import Path
 
+# Never route local traffic through a (Windows/system) proxy: Gradio checks http://127.0.0.1 on start-up
+# and fails with "localhost is not accessible" when a proxy intercepts it.
+for _k in ("NO_PROXY", "no_proxy"):
+    os.environ[_k] = "127.0.0.1,localhost,0.0.0.0," + os.environ.get(_k, "")
+
 import gradio as gr
 import pandas as pd
 import torch

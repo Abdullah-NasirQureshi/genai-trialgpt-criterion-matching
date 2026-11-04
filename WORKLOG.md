@@ -102,3 +102,10 @@
     answers cite no evidence; 12 distinct hand-explained cases (false certainty, missed implicit evidence, wrong
     evidence sentence, 'not applicable' vs 'not enough information' confusion, debatable gold labels). I double-checked every
     aggregate number against the prediction file.
+32. **Browser app tested** (`src/test_app.py`, log `results/app_test.log`): 17 checks pass -- bad input is rejected with a
+    message (empty note, no criteria, 31 criteria, overlong criterion); the three decoding modes give identical decisions;
+    cited evidence is the exact note sentence; the HTML report has the disclaimer and provenance; the live benchmark runs
+    (KV cache 12.5 tok/s vs 5.1 without cache vs 8.8 speculative on the demo input).
+    **Bug found and fixed:** the web server would not start ("localhost is not accessible") because newer `pydantic` breaks
+    Gradio 5.12; pinned `pydantic==2.10.6` (also in `requirements.txt`). After the fix the server returns HTTP 200 and a
+    request through the real web API (the path the browser uses) returned correct results.
