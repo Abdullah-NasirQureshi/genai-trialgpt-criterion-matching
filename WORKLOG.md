@@ -113,3 +113,10 @@
     table had no column names; the report printed my local file path (now repo-relative); and for "not excluded" with no cited
     sentence the explanation now says it is NOT proof the note rules the criterion out. Re-ran the 18 app checks (all pass)
     and saved screenshots `paper/figs/app_screening.png` and `paper/figs/app_report.png`.
+34. **Wrote the rest of the paper:** `paper/sec_results.tex` (every number taken from the result files; 12 tables/figures, each
+    explained in the text), `paper/sec_limits_conclusion.tex`, plus a patient-level bootstrap (`src/bootstrap_ci.py`:
+    fine-tuned test accuracy 0.721, 95% interval [0.602, 0.803]; zero-shot 0.060 [0.031, 0.099]) and a trivial majority-label
+    baseline (test acc 0.626, macro-F1 0.272) so the model is compared with something sensible. While re-reading I
+    corrected several mistakes of my own (one wrong ratio, GB vs MiB, an unclear memory statement) before finalising.
+35. **LaTeX checks without a compiler:** `src/check_tex.py` (citations, labels, figures, braces) and
+    `src/check_tex_chars.py` (stray %, _, &, non-ASCII) both pass. Still needs a real compile on Overleaf.

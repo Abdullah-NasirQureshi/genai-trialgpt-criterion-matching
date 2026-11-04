@@ -1,4 +1,5 @@
 \section{Materials and Methods}
+\label{sec:methods}
 
 \subsection{Dataset and Fixed Split}
 We use only the TrialGPT Criterion Annotations dataset~\cite{ncbi2024trialgptdata}: 1015 rows from 53 patients and 103 trials. Each row contains a patient note whose sentences are numbered from~0, a trial title, a criterion type (inclusion or exclusion), the criterion text, an expert eligibility label and the expert-selected evidence sentence IDs. Inclusion criteria use the labels \emph{included}, \emph{not included}, \emph{not enough information} (NEI) and \emph{not applicable} (N/A); exclusion criteria use \emph{excluded}, \emph{not excluded}, NEI and N/A. All eight categories are preserved. The dataset also contains GPT-4 explanations, sentences and eligibility predictions; these columns, together with the dataset's own \texttt{training} flag, are dropped in \texttt{data/prepare\_data.py} so they can never be used as input or leak into evaluation.
