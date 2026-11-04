@@ -51,3 +51,9 @@
     **private** repo https://github.com/Abdullah-NasirQureshi/genai-trialgpt-criterion-matching and pushed all
     commits. (Entry 13 above is now outdated.) It is private: **make it public before submitting** so graders can open it
     (GitHub > Settings > Danger zone > Change visibility). I will keep pushing after each logical commit.
+19. **LoRA run 1 finished** (rank 16, lr 2e-4, 3 epochs, 35 min, 3.9 GB GPU). Best validation loss 0.1333 at epoch 2
+    (0.658 before training). On the validation split: accuracy 0.068 -> **0.728**, macro-F1 0.081 -> **0.467**.
+    Problem found: for exclusion criteria the model says "not excluded" 139 times out of 140 (same as always guessing the
+    majority class) and never predicts "not enough information" / "not applicable"; it also misses all "not included".
+20. **Trying one fix: class-balanced training** (`--balance`: repeat rare labels, e.g. "excluded" x6). Trained on train
+    only, judged on validation only, 2 epochs (run `lora_bal`). The test set is still untouched.

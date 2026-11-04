@@ -28,8 +28,23 @@ MODEL = str(ROOT / "models" / "Qwen2.5-1.5B-Instruct")  # default; override with
 MAX_LEN = 1024  # no example exceeds 555 tokens (results/token_stats.json) -> no truncation
 
 
-def build_examples(split, tok):  # uses the global MAX_LEN
+def balance_rows(rows):
+    """Oversample rare labels (per criterion type): repeat factor = round(sqrt(max_count / count)).
+    Applied to the TRAIN split only, to counter the dominant 'not excluded' / NEI classes."""
+    from collections import Counter
+    cnt = Counter((r["criterion_type"], r["expert_eligibility"]) for r in rows)
+    mx = {t: max(c for (tt, _), c in cnt.items() if tt == t) for t in ("inclusion", "exclusion")}
+    out = []
+    for r in rows:
+        f = max(1, round((mx[r["criterion_type"]] / cnt[(r["criterion_type"], r["expert_eligibility"])]) ** 0.5))
+        out += [r] * f
+    return out
+
+
+def build_examples(split, tok, balance=False):  # uses the global MAX_LEN
     rows = [json.loads(l) for l in open(ROOT / "data" / f"{split}.jsonl", encoding="utf-8")]
+    if balance:
+        rows = balance_rows(rows)
     ex = []
     for r in rows:
         p = encode_prompt(tok, split_sentences(r["note"]), r["criterion_type"], r["criterion_text"])
@@ -92,6 +107,7 @@ def main():
     ap.add_argument("--micro-bs", type=int, default=4)
     ap.add_argument("--grad-accum", type=int, default=4)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--balance", action="store_true", help="oversample rare labels in train split")
     a = ap.parse_args()
     model_path = a.model
 
@@ -103,7 +119,8 @@ def main():
               open(out / "config.json", "w"), indent=2)
 
     tok = AutoTokenizer.from_pretrained(model_path)
-    train, val = build_examples("train", tok), build_examples("val", tok)
+    train, val = build_examples("train", tok, a.balance), build_examples("val", tok)
+    print("train examples:", len(train), "(balanced)" if a.balance else "")
     model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16).cuda()
     model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
     model.enable_input_require_grads()
