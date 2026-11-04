@@ -97,3 +97,8 @@
     * Evidence sentences: micro-F1 0.531 on all rows, 0.636 on rows that have gold evidence (zero-shot: 0.122 / 0.398).
     * Honest caveats: exclusion accuracy (0.679) is slightly BELOW "always say not excluded" (0.695); the model finds only 3 of 28
       exclusion "not enough information" cases and 1 of 7 "not included"; the test set has no "excluded" example.
+31. **Error analysis written** (`results/error_analysis_final.md`): 58 of 206 test predictions are wrong. 25 are "not enough
+    information" wrongly called "not excluded" (the model treats 'not mentioned' as 'not a problem'); 42 of the 58 wrong
+    answers cite no evidence; 12 distinct hand-explained cases (false certainty, missed implicit evidence, wrong
+    evidence sentence, 'not applicable' vs 'not enough information' confusion, debatable gold labels). I double-checked every
+    aggregate number against the prediction file.
