@@ -1,0 +1,15 @@
+{
+  "run": "lora_r16",
+  "epochs": 3,
+  "lr": 0.0002,
+  "rank": 16,
+  "alpha": 32,
+  "dropout": 0.05,
+  "micro_bs": 4,
+  "grad_accum": 4,
+  "seed": 42,
+  "model": "Qwen2.5-1.5B-Instruct",
+  "max_len": 1024,
+  "target_modules": "q,k,v,o,gate,up,down",
+  "precision": "fp16 base + fp32 LoRA, autocast"
+}
