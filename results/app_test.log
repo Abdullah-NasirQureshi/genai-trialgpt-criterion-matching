@@ -3,7 +3,7 @@ PASS invalid input rejected: tiny note  [- The patient note is empty or too shor
 PASS invalid input rejected: no criteria  [- Enter at least one inclusion or exclusion criterion (one per line).]
 PASS invalid input rejected: 31 criteria  [- Too many criteria (max 30 per run).]
 PASS invalid input rejected: overlong criterion  [- A criterion is longer than 800 characters.]
-PASS screening runs in mode 'KV cache'  [Loaded in 13s. Target: Qwen2.5-1.5B-Instruct + adapter: E:\Uni Stuff\Semester_07\Gen-AI\As]
+PASS screening runs in mode 'KV cache'  [Loaded in 12s. Target: Qwen2.5-1.5B-Instruct + adapter: E:\Uni Stuff\Semester_07\Gen-AI\As]
         Type                                                       Criterion        Decision Evidence IDs
 0  inclusion  Adults aged 18 years or older with acute myocardial infarction        included            0
 1  inclusion                       Patients with ST-segment elevation on ECG        included            3
@@ -17,9 +17,10 @@ Rule: every applicable inclusion criterion is 'included' and no exclusion criter
 **Criteria with missing/unclear information (0):**
 - none
 
-_Mode: KV cache; total time 6.9s for 5 criteria._
+_Mode: KV cache; total time 6.7s for 5 criteria._
 
 **Educational screening prototype - NOT a clinical enrollment decision.** Outputs come from a small language model fine-tuned on 37 patients and can be w
+PASS report does not leak absolute local paths
 PASS report contains disclaimer
 PASS report contains provenance
 PASS evidence text is the exact note sentence for every cited ID
@@ -30,9 +31,9 @@ PASS all three decoding modes give the same decisions  [['included', 'included',
 PASS unnumbered free-text note accepted
 PASS live benchmark returns 3 modes
                 Mode  Seconds (median)  Tokens/s  Peak GPU MiB  Same tokens as KV-cache                             Extra
-0           No cache             6.232      5.13          3923                     True                                  
-1           KV cache             2.567     12.47          3927                     True                                  
-2  Speculative (k=4)             3.650      8.77          3974                     True  accept 0.67, 3.67 tok/target-fwd
+0           No cache             6.353      5.04          3923                     True                                  
+1           KV cache             2.612     12.25          3927                     True                                  
+2  Speculative (k=4)             3.549      9.02          3974                     True  accept 0.67, 3.67 tok/target-fwd
 PASS benchmark modes produce identical tokens
 PASS benchmark with invalid input is rejected
 ALL PASS

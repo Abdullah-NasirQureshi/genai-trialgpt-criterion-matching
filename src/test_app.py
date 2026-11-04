@@ -36,6 +36,8 @@ for mode in ("KV cache", "No cache (reference)", "Speculative decoding"):
     if mode == "KV cache":
         print(df[["Type", "Criterion", "Decision", "Evidence IDs"]].to_string(), "\n", msg[:420], flush=True)
         html = Path(rep).read_text(encoding="utf-8")
+        (ROOT / "results" / "sample_screening_report.html").write_text(html, encoding="utf-8")
+        check("report does not leak absolute local paths", "Uni Stuff" not in html and "Users" not in html and ":" + chr(92) not in html)
         check("report contains disclaimer", "not a clinical enrollment decision" in html)
         check("report contains provenance", "Provenance" in html and "LoRA adapter" in html and "Decoding mode" in html)
         sents = app.split_sentences(app.EXAMPLE_NOTE)

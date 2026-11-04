@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Eligibility screening report</title>
+<style>body{font-family:Arial;margin:2em;max-width:1100px}table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #999;padding:6px;vertical-align:top;font-size:13px}th{background:#eee}
+.warn{background:#fff3cd;border:1px solid #e0b000;padding:10px}</style></head><body>
+<h1>Eligibility screening report</h1>
+<div class="warn"><b>Educational screening prototype - not a clinical enrollment decision.</b> Review by a qualified clinician is required.</div>
+<p><b>Trial:</b> Example trial<br><b>Generated:</b> 2026-11-05 04:39:58</p>
+<h2>Overall preliminary outcome: LIKELY ELIGIBLE (preliminary)</h2><p>Rule: every applicable inclusion criterion is &#x27;included&#x27; and no exclusion criterion applies.</p>
+<h2>Criterion-level results</h2>
+<table><tr><th>#</th><th>Type</th><th>Criterion</th><th>Decision</th><th>Evidence IDs</th><th>Evidence text</th><th>Explanation</th></tr><tr><td>1</td><td>inclusion</td><td>Adults aged 18 years or older with acute myocardial infarction</td><td><b>included</b></td><td>0</td><td>[0] A 58-year-old man presents with two days of crushing chest pain radiating to the left arm.</td><td>Label &#x27;included&#x27; is based on note sentence(s): [0] &quot;A 58-year-old man presents with two days of crushing chest pain radiating to the left arm.&quot;</td></tr><tr><td>2</td><td>inclusion</td><td>Patients with ST-segment elevation on ECG</td><td><b>included</b></td><td>3</td><td>[3] ECG shows ST elevation in leads II, III and aVF.</td><td>Label &#x27;included&#x27; is based on note sentence(s): [3] &quot;ECG shows ST elevation in leads II, III and aVF.&quot;</td></tr><tr><td>3</td><td>exclusion</td><td>History of bleeding disorder or active bleeding</td><td><b>not excluded</b></td><td>4</td><td>[4] He denies any history of bleeding disorders.</td><td>Label &#x27;not excluded&#x27; is based on note sentence(s): [4] &quot;He denies any history of bleeding disorders.&quot;</td></tr><tr><td>4</td><td>exclusion</td><td>Pregnancy or lactation</td><td><b>not applicable</b></td><td>-</td><td>-</td><td>The model judged this criterion irrelevant to this patient.</td></tr><tr><td>5</td><td>exclusion</td><td>Known allergy to aspirin</td><td><b>not excluded</b></td><td>-</td><td>-</td><td>No sentence was cited. &#x27;not excluded&#x27; here only means the model found nothing in the note that decides the criterion; this is NOT confirmation that the note rules it out - check whether the note is complete.</td></tr></table>
+<h2>Patient note (as screened)</h2><pre style="white-space:pre-wrap">0. A 58-year-old man presents with two days of crushing chest pain radiating to the left arm.
+1. He has a history of hypertension and type 2 diabetes treated with metformin.
+2. He smokes one pack of cigarettes per day.
+3. ECG shows ST elevation in leads II, III and aVF.
+4. He denies any history of bleeding disorders.</pre>
+<h2>Provenance</h2><ul><li>Target model: Qwen2.5-1.5B-Instruct + LoRA adapter results/lora_final/adapter</li>
+<li>Decoding mode: KV cache</li>
+<li>Greedy decoding, max 64 new tokens, fp16, local execution</li>
+<li>Overall outcome is a rule-based aggregation of criterion-level predictions, not a labelled ground truth.</li></ul>
+</body></html>

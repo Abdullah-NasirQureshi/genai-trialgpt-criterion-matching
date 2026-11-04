@@ -81,9 +81,13 @@ def explain(label, ev, sents):
     if label == "not applicable":
         return "The model judged this criterion irrelevant to this patient."
     if not ev:
-        return ("No sentence in the note was cited. Absence of evidence is NOT proof either way; "
-                "this means the note itself does not settle the question." if label == "not enough information"
-                else "The model gave this label without citing a sentence; verify manually.")
+        if label == "not enough information":
+            return ("No sentence in the note was cited. Absence of evidence is NOT proof either way; "
+                    "this means the note itself does not settle the question.")
+        if label in ("not excluded", "not included"):
+            return (f"No sentence was cited. '{label}' here only means the model found nothing in the note that decides the "
+                    "criterion; this is NOT confirmation that the note rules it out - check whether the note is complete.")
+        return "The model gave this label without citing a sentence (unsupported); verify manually."
     quotes = " ".join(f'[{i}] "{sents[i]}"' for i in ev)
     return f"Label '{label}' is based on note sentence(s): {quotes}"
 
@@ -163,6 +167,14 @@ def screen(note, trial_title, inc, exc, mode, k, progress=gr.Progress()):
     return df, summary, status, report
 
 
+def short(path):
+    """repo-relative path for provenance (never print the user's absolute path)"""
+    try:
+        return str(Path(path).resolve().relative_to(ROOT)).replace("\\", "/")
+    except Exception:
+        return Path(str(path)).name
+
+
 def write_report(note, title, df, verdict, rule, mode, k):
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     esc = html.escape
@@ -181,8 +193,8 @@ td,th{{border:1px solid #999;padding:6px;vertical-align:top;font-size:13px}}th{{
 <h2>Criterion-level results</h2>
 <table><tr><th>#</th><th>Type</th><th>Criterion</th><th>Decision</th><th>Evidence IDs</th><th>Evidence text</th><th>Explanation</th></tr>{rows}</table>
 <h2>Patient note (as screened)</h2><pre style="white-space:pre-wrap">{esc(note)}</pre>
-<h2>Provenance</h2><ul><li>Target model: {esc(Path(BIG).name)} + LoRA adapter {esc(str(_STATE.get('target_adapter')))}</li>
-<li>Decoding mode: {esc(mode)}{' (k=%d, draft %s + %s)' % (k, Path(SMALL).name, _STATE.get('draft_adapter')) if mode.startswith('Spec') else ''}</li>
+<h2>Provenance</h2><ul><li>Target model: {esc(Path(BIG).name)} + LoRA adapter {esc(short(_STATE.get('target_adapter')))}</li>
+<li>Decoding mode: {esc(mode)}{' (k=%d, draft %s + %s)' % (k, Path(SMALL).name, short(_STATE.get('draft_adapter'))) if mode.startswith('Spec') else ''}</li>
 <li>Greedy decoding, max {MAX_NEW} new tokens, fp16, local execution</li>
 <li>Overall outcome is a rule-based aggregation of criterion-level predictions, not a labelled ground truth.</li></ul>
 </body></html>"""
@@ -266,7 +278,8 @@ def build_ui():
                     summary = gr.Markdown()
                     status = gr.Textbox(label="Model status", interactive=False)
                     report = gr.File(label="Download screening report (HTML)")
-            table = gr.Dataframe(label="Criterion-level results (decision, exact evidence, explanation)", wrap=True)
+            table = gr.Dataframe(label="Criterion-level results (decision, exact evidence, explanation)", wrap=True,
+                                 headers=["#", "Type", "Criterion", "Decision", "Evidence IDs", "Evidence text", "Explanation", "Seconds", "Raw output"])
             run.click(screen, [note, title, inc, exc, mode, k], [table, summary, status, report])
         with gr.Tab("Inference benchmark (live)"):
             gr.Markdown("Runs the three decoders on **your** input right now and compares speed, memory and token equality.")

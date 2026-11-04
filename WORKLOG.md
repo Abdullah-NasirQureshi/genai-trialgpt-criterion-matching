@@ -109,3 +109,7 @@
     **Bug found and fixed:** the web server would not start ("localhost is not accessible") because newer `pydantic` breaks
     Gradio 5.12; pinned `pydantic==2.10.6` (also in `requirements.txt`). After the fix the server returns HTTP 200 and a
     request through the real web API (the path the browser uses) returned correct results.
+33. **App polish + screenshots.** Fixed three small things found while taking screenshots with headless Chrome: empty results
+    table had no column names; the report printed my local file path (now repo-relative); and for "not excluded" with no cited
+    sentence the explanation now says it is NOT proof the note rules the criterion out. Re-ran the 18 app checks (all pass)
+    and saved screenshots `paper/figs/app_screening.png` and `paper/figs/app_report.png`.
