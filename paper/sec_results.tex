@@ -1,5 +1,30 @@
 \section{Results and Discussion}
 
+\subsection{Design Decisions, Rejected Alternatives and Observed Difficulties}
+Table~\ref{tab:decisions} collects the main technical decisions, the alternatives that were considered or rejected, and the evidence that supported the final choice; the experimental evidence for each row is discussed in the subsections that follow.
+
+\begin{table*}[t]
+\caption{Design decisions, alternatives and evidence. ``Estimated'' values are back-of-the-envelope figures (about 16 bytes per parameter for mixed-precision AdamW), not measurements.}
+\label{tab:decisions}
+\centering\footnotesize
+\begin{tabular}{p{2.3cm}p{3.5cm}p{4.6cm}p{5.6cm}}
+\hline
+Decision & Alternatives & Evidence / difficulty & Outcome \\
+\hline
+Base model & Llama-3.2-1B, Gemma-2-2B, Qwen2.5-3B, Phi-3-mini (Table~\ref{tab:models}) & Weights of the 2--4\,B models alone fill or exceed 6\,GB; Llama is gated and under a restrictive license & Qwen2.5-1.5B (Apache-2.0, 3.9\,GiB peak for training); only this model was trained. \\
+Adaptation method & Full fine-tuning; QLoRA 4-bit & Full fine-tuning needs an estimated 25\,GB; QLoRA was unnecessary and would add quantisation noise to the numerical comparisons & LoRA $r=16$ on all linear layers over an fp16 base. \\
+Loss computation & Logits over all positions & First attempt stalled at 5.9\,GiB (no progress after 4\,min) because of the 152k-way vocabulary & Output layer applied only at answer positions: 3.9\,GiB, 16\,s per step, same loss. \\
+Label imbalance & Plain training; class-weighted or focal loss (not tried) & Plain run answered \emph{not excluded} for 139 of 140 validation exclusion rows (macro-F1 0.467) & Rare-label oversampling: validation macro-F1 0.534, exclusion macro-F1 0.377 $\rightarrow$ 0.567. \\
+Output format & Classification head; free-text rationale & A head cannot return sentence IDs jointly and would not exercise autoregressive decoding; free text is hard to evaluate and may hallucinate & Single-line JSON (label, IDs); 0 invalid outputs on validation and test. \\
+Number of epochs & 3 epochs & Validation loss was lowest after epoch 2 (0.1333) and rose slightly in epoch 3 (0.1358) & Best-validation-loss checkpoint; balanced run limited to 2 epochs. \\
+Precision for cache tests & fp16 only & fp16 diverged from the reference in two of five settings; exact logit ties found & Same tests in fp32 on the 0.5\,B model: identical at all five settings (1.5\,B in fp32 does not fit). \\
+Draft model & Untuned 0.5B draft & Untuned draft: acceptance 0.62 versus 0.90 ($k=4$), Table~\ref{tab:draftcmp} & Draft trained with the same recipe (11\,min). \\
+Attention tile size & $64\times64$ versus $256\times256$ & 64: 7\,MiB but 34$\times$ slower than the dense reference; 256: 20\,MiB and 2$\times$ slower & Both reported; neither beats the fused kernel. \\
+Engineering issues & -- & Large downloads stalled on this network; Gradio~5.12 failed to start with newer \texttt{pydantic} (reported as ``localhost not accessible'') & Resumable \texttt{curl} downloads; \texttt{pydantic} pinned to 2.10.6. \\
+\hline
+\end{tabular}
+\end{table*}
+
 \subsection{Fine-Tuning and Model Selection}
 Table~\ref{tab:train} summarises the three training runs and Fig.~\ref{fig:train} shows their curves. Starting from the same frozen weights, the answer-token validation loss of the 1.5\,B model drops from 0.658 to 0.13--0.15 within the first epoch, and the zero-shot model that already produces valid JSON in 100\,\% of the cases is turned from a nearly useless classifier (validation accuracy 0.068, macro-F1 0.081) into a usable one (0.728 / 0.467). The first run (3 epochs, rank 16) reaches its best validation loss after epoch 2 (0.1333) and rises slightly in epoch 3 (0.1358), a mild sign of overfitting on 603 examples; the checkpoint with the lowest validation loss is kept.
 
@@ -272,6 +297,25 @@ Free generation & spec.\ $k=8$ & 51.3 & 9.98 & 0.72 & 0.618 & 5.86 & 3949 \\
 \caption{Speed-up over plain KV-cached decoding (blue, left axis) and draft acceptance rate (orange, right axis) versus draft length $k$ for the two workloads. Speed-up stays below the break-even line (dashed) although acceptance is high.}
 \label{fig:spec}
 \end{figure}
+
+\textbf{Effect of fine-tuning the draft.} To check that adapting the draft was worthwhile, we repeated the task-answer benchmark with the \emph{untuned} Qwen2.5-0.5B-Instruct as draft (Table~\ref{tab:draftcmp}). The output of the target is again identical to greedy decoding for all 12 prompts and all $k$, which shows that correctness depends only on the verification step and not on the draft's quality. The fine-tuned draft, however, is accepted much more often (0.90 versus 0.62 at $k=4$) and gives 23--46\,\% more tokens per second than the untuned one (for example 8.74 versus 6.45 tokens/s at $k=4$), so the draft's training on the task is what keeps the slowdown moderate; with the untuned draft, speculative decoding runs at only 0.49--0.63$\times$ the speed of plain decoding.
+
+\begin{table}[t]
+\caption{Fine-tuned versus untuned 0.5B draft on the task answers (same target and prompts as Table~\ref{tab:spec}). Both variants reproduce the greedy output exactly (12 of 12 prompts).}
+\label{tab:draftcmp}
+\centering\footnotesize
+\begin{tabular}{rcccccc}
+\hline
+ & \multicolumn{3}{c}{Fine-tuned draft} & \multicolumn{3}{c}{Untuned draft} \\
+$k$ & Accept. & Tok./fwd & Speed-up & Accept. & Tok./fwd & Speed-up \\
+\hline
+2 & 0.949 & 2.90 & 0.78 & 0.667 & 2.33 & 0.63 \\
+4 & 0.897 & 4.59 & 0.80 & 0.623 & 3.49 & 0.59 \\
+6 & 0.901 & 6.41 & 0.75 & 0.644 & 4.87 & 0.57 \\
+8 & 0.780 & 7.24 & 0.71 & 0.483 & 4.87 & 0.49 \\
+\hline
+\end{tabular}
+\end{table}
 
 \textbf{Why the slowdown.} A speculative round costs $k\,t_d + t_v$ (draft steps plus one verification pass) and yields $\bar n$ tokens, so the speed-up is $\bar n\,t_t/(k\,t_d+t_v)$ where $t_t$ is the target's one-token time. Table~\ref{tab:stepcost} gives the measured step times. The 0.5\,B draft needs 57\,ms per token against 71\,ms for the 1.5\,B target, a cost ratio $c=0.81$ and not the $c\ll1$ that speculative decoding assumes: both models run eagerly with a similar number of layers (24 versus 28) on a GPU where per-layer kernel-launch overhead, not arithmetic or memory bandwidth, dominates, so shrinking the model by 3$\times$ barely shortens a step. Conversely verifying $k+1$ tokens costs about the same as one token (68--75\,ms), which is why acceptance and tokens per round are good. Inserting the measured values predicts a speed-up of 0.96--1.13$\times$, still above the observed 0.71--0.80$\times$. We attribute the remaining gap to costs outside the timed forward passes: the draft model must also prefill the prompt (the task answers average only 16 tokens, so the extra prefill is a large share of the total), and our loop adds host--device synchronisation (one \texttt{.item()} per round), cache cropping and small tensor creations; we did not isolate these contributions individually. Speculative decoding would be expected to pay off with a much cheaper draft, a compiled or CUDA-graph decode loop, or a larger, more memory-bound target; we did not try these within the 6\,GB budget.
 

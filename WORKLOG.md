@@ -120,3 +120,8 @@
     corrected several mistakes of my own (one wrong ratio, GB vs MiB, an unclear memory statement) before finalising.
 35. **LaTeX checks without a compiler:** `src/check_tex.py` (citations, labels, figures, braces) and
     `src/check_tex_chars.py` (stray %, _, &, non-ASCII) both pass. Still needs a real compile on Overleaf.
+36. **Release + docs.** Created GitHub release `v1.0` with `adapters.zip` (final 1.5B adapter + 0.5B draft adapter, 101 MB) and
+    tested downloading it back (same size, zip OK). Re-ran the split script: the manifest is identical (reproducible). Added a
+    design-decisions table to the paper (alternatives, evidence, difficulties) and wrote `DEMO_SCRIPT.md` (minute-by-minute
+    plan for the 5-7 min video, with an unseen test note) and `DEFENSE_NOTES.md` (short answers + where each thing is in code).
+    I cannot record the video or fill in your name/university -- see the TODO list at the end of this file.
