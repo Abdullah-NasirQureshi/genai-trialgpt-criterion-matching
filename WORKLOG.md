@@ -47,3 +47,7 @@
     one pass, we keep the matching ones, fix the first wrong one, and trim both caches so they stay in sync.
     `src/bench_spec.py` checks it matches normal greedy output, also against Hugging Face's own assisted generation.
 17. LoRA training epoch 1 finished: validation loss dropped from 0.658 to 0.148 (good sign).
+18. **GitHub connected (you asked for it).** The earlier push was blocked, but after your explicit request I created the
+    **private** repo https://github.com/Abdullah-NasirQureshi/genai-trialgpt-criterion-matching and pushed all
+    commits. (Entry 13 above is now outdated.) It is private: **make it public before submitting** so graders can open it
+    (GitHub > Settings > Danger zone > Change visibility). I will keep pushing after each logical commit.

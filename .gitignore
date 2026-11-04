@@ -18,3 +18,4 @@ paper/*.out
 paper/*.bbl
 paper/*.blg
 .claude/
+GenAI_Assignment*.pdf
