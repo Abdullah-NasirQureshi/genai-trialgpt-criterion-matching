@@ -1,0 +1,17 @@
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+[base_zeroshot/test] n=206 acc=0.058 macroF1=0.084 invalid=0 evidence microF1(all)=0.122 microF1(gold-only)=0.398 time=100s
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+[lora_final/test] n=206 acc=0.718 macroF1=0.604 invalid=0 evidence microF1(all)=0.531 microF1(gold-only)=0.636 time=76s
+FINALDONE

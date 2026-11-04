@@ -91,3 +91,9 @@
     assisted generation on 6/6). The fine-tuned draft is accepted 90-95% of the time at small k (62-84% on long free
     text), giving up to 7 tokens per big-model pass. But overall it is **slower** (0.71-0.82x of normal cached decoding):
     on this laptop GPU the 0.5B draft is almost as slow per token as the 1.5B model, so drafting costs too much.
+30. **FINAL TEST RESULTS (run once, adapter chosen on validation only)**, 206 test rows, 0 invalid outputs:
+    * Zero-shot base model: accuracy 0.058, macro-F1 0.084.
+    * Fine-tuned (class-balanced LoRA): accuracy **0.718**, macro-F1 **0.604** (inclusion 0.787 / 0.579; exclusion 0.679 / 0.500).
+    * Evidence sentences: micro-F1 0.531 on all rows, 0.636 on rows that have gold evidence (zero-shot: 0.122 / 0.398).
+    * Honest caveats: exclusion accuracy (0.679) is slightly BELOW "always say not excluded" (0.695); the model finds only 3 of 28
+      exclusion "not enough information" cases and 1 of 7 "not included"; the test set has no "excluded" example.
