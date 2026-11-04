@@ -1,5 +1,5 @@
 \section{Experimental Setup and Metrics}
-\textbf{Hardware and software.} All experiments ran on a single laptop with an NVIDIA GeForce RTX~4050 Laptop GPU (6\,GB VRAM, Windows~11), Python~3.11, PyTorch~2.5.1 (CUDA~12.1), Transformers~4.49.0, PEFT~0.14.0 and Gradio~5.12.0 (pinned in \texttt{requirements.txt}). No paid GPU or API was used. Models are executed in fp16 unless stated otherwise.
+\textbf{Hardware and software.} All experiments ran on a single laptop with an NVIDIA GeForce RTX~4050 Laptop GPU (6\,GB VRAM, Windows~11), Python~3.11, PyTorch~2.5.1 (CUDA~12.1), Transformers~4.49.0~	te{wolf2020transformers}, PEFT~0.14.0 and Gradio~5.12.0 (pinned in \texttt{requirements.txt}). No paid GPU or API was used. Models are executed in fp16 unless stated otherwise.
 
 \textbf{Decoding settings for comparisons.} Every accuracy comparison (zero-shot base model, fine-tuned model) uses the same prompts, the same examples, greedy decoding (no sampling), at most 48 new tokens, fp16 and left-padded batches of 8. Zero-shot means the \emph{same} Qwen2.5-1.5B-Instruct weights and the \emph{same} prompt with no adapter.
 

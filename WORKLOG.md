@@ -70,3 +70,5 @@
     the `paper/` folder to Overleaf (it compiles with the IEEEtran class, which Overleaf has) to get the PDF.
     I will check the .tex files for syntax mistakes with my own script instead. `main.tex` has TODO markers for your
     name, university, student ID, video link.
+24. Wrote `README.md` (setup, start the app, reproduce every experiment, repo map) and `src/check_tex.py`, a checker that
+    catches LaTeX mistakes without a compiler (unbalanced braces, missing citations/labels, figures never discussed).
