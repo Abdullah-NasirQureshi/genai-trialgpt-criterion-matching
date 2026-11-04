@@ -8,6 +8,24 @@ online-softmax attention** and **greedy speculative decoding**, and a **browser 
 > **Educational screening prototype - not a clinical enrollment decision tool.**
 
 Tested on: Windows 11, Python 3.11, RTX 4050 Laptop GPU (6 GB), CUDA 12.1. Work log of every step: [WORKLOG.md](WORKLOG.md).
+Other documents: IEEE paper source in [paper/](paper/) (compile `main.tex` on Overleaf or with `pdflatex`+`bibtex`),
+[DEMO_SCRIPT.md](DEMO_SCRIPT.md) (video plan), [DEFENSE_NOTES.md](DEFENSE_NOTES.md) (what to explain).
+
+## Results at a glance (held-out test split: 8 patients, 206 criteria; all numbers in `results/`)
+| | Accuracy | Macro-F1 | Evidence micro-F1 (all rows / rows with gold evidence) |
+|---|---|---|---|
+| Majority label per criterion type | 0.626 | 0.272 | 0.000 / 0.000 |
+| Zero-shot Qwen2.5-1.5B-Instruct | 0.058 | 0.084 | 0.122 / 0.398 |
+| **LoRA fine-tuned (class-balanced)** | **0.718** | **0.604** | **0.531 / 0.636** |
+
+Weak spot (be aware): on exclusion criteria the model's accuracy (0.679) is slightly below always answering "not excluded" (0.695), and it
+finds only 3 of 28 "not enough information" exclusion cases. The test split has no "excluded" example.
+
+| Mechanism | Result |
+|---|---|
+| KV cache vs no cache (1.5B, fp16) | 2.2x (128-token prompt) to 7x (512) faster decoding, same memory; identical tokens in fp32, 2 of 5 fp16 settings diverge because of exact logit ties |
+| Tiled online-softmax attention | matches a float64 reference to 4e-5 (fp32); 59-158x less memory at L=4096, but slower than dense (34x) and fused SDPA (up to 303x) in plain PyTorch |
+| Greedy speculative decoding (0.5B draft) | output identical to greedy; 90-95% acceptance; **0.71-0.82x speed** (slower; draft is only 19% cheaper per step) |
 
 ## 1. Setup
 ```bash
