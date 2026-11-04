@@ -1,0 +1,5 @@
+k,target_1tok_ms,target_verify_ms,draft_1tok_ms,cost_ratio_c,round_ms,measured_acceptance,measured_tokens_per_round,predicted_speedup,measured_speedup
+2,71.12,68.04,57.39,0.807,182.8,0.949,2.9,1.128,0.78
+4,71.12,69.73,57.39,0.807,299.3,0.897,4.59,1.091,0.797
+6,71.12,74.59,57.39,0.807,418.9,0.901,6.41,1.088,0.754
+8,71.12,75.38,57.39,0.807,534.5,0.78,7.24,0.963,0.713
