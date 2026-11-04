@@ -60,3 +60,8 @@
 21. Wrote `src/error_analysis.py`: picks diverse mistakes (false certainty, missed information, flipped polarity,
     unsupported answers, wrong evidence) and prints them with the patient sentences quoted. I will run it on the
     TEST predictions at the end and write the explanations by hand in the paper.
+22. **Started the paper** (`paper/`): bibliography with 16 real references (`refs.bib`), the Introduction + Related Work
+    (`sec_intro_related.tex`) and the full Materials & Methods (`sec_methods.tex`: dataset/split, model comparison table,
+    prompt format, LoRA setup, KV-cache, tiled attention equations, speculative algorithm, app workflow). Architecture
+    numbers (layers, heads, KV bytes per token) were read from the real config files. Results sections come after the
+    experiments finish.

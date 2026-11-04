@@ -1,0 +1,96 @@
+\section{Materials and Methods}
+
+\subsection{Dataset and Fixed Split}
+We use only the TrialGPT Criterion Annotations dataset~\cite{ncbi2024trialgptdata}: 1015 rows from 53 patients and 103 trials. Each row contains a patient note whose sentences are numbered from~0, a trial title, a criterion type (inclusion or exclusion), the criterion text, an expert eligibility label and the expert-selected evidence sentence IDs. Inclusion criteria use the labels \emph{included}, \emph{not included}, \emph{not enough information} (NEI) and \emph{not applicable} (N/A); exclusion criteria use \emph{excluded}, \emph{not excluded}, NEI and N/A. All eight categories are preserved. The dataset also contains GPT-4 explanations, sentences and eligibility predictions; these columns, together with the dataset's own \texttt{training} flag, are dropped in \texttt{data/prepare\_data.py} so they can never be used as input or leak into evaluation.
+
+Following the assignment protocol, the sorted unique patient IDs are shuffled with \texttt{numpy.random.default\_rng(42)}; the first 37 patients form the training split, the next 8 the validation split and the remaining 8 the test split. This gives 603, 206 and 206 annotations. The script asserts that the three patient sets are disjoint and that every annotation of a patient lies in exactly one split; the manifest (\texttt{data/split\_manifest.json}) lists all patient IDs and counts. Hyperparameters and the final adapter were chosen on the validation split only; the test split was evaluated once at the end.
+
+Two properties of the data shape the evaluation (Table~\ref{tab:data}). First, the label distribution is strongly skewed: \emph{not excluded} alone is 44\,\% of the test rows, and the test split contains no \emph{excluded} example at all. Second, 60\,\% of all rows (70\,\% of test rows) have an \emph{empty} expert evidence set, so the treatment of empty sets matters for the evidence metrics.
+
+\begin{table}[t]
+\caption{Number of annotations per split and label (inclusion / exclusion criteria).}
+\label{tab:data}
+\centering\footnotesize
+\begin{tabular}{lrrr}
+\hline
+Label & Train & Val & Test \\
+\hline
+included & 88 & 35 & 27 \\
+not included & 13 & 3 & 7 \\
+excluded & 8 & 2 & 0 \\
+not excluded & 292 & 101 & 91 \\
+NEI (incl.\,/\,excl.) & 109\,/\,65 & 27\,/\,26 & 38\,/\,28 \\
+N/A (incl.\,/\,excl.) & 5\,/\,23 & 1\,/\,11 & 3\,/\,12 \\
+\hline
+Total annotations & 603 & 206 & 206 \\
+Patients & 37 & 8 & 8 \\
+Rows with empty gold evidence & 349 & 116 & 145 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Model Candidates and Selection}
+The task needs a decoder-only model that is open-weight, runs locally, supports autoregressive decoding with a KV cache, and can be fine-tuned and benchmarked on a laptop GPU with 6\,GB of VRAM (RTX~4050). Table~\ref{tab:models} compares candidates; fp16 weight memory is $2\times$ the parameter count. Training additionally needs activations, LoRA parameters and optimizer states, so a model whose fp16 weights alone approach the VRAM size is not usable without 4-bit quantisation, which would also confound the numerical comparisons in Tasks~3--5.
+
+\begin{table*}[t]
+\caption{Open-weight decoder candidates. Parameter counts and context windows are from the model cards (Qwen values verified from the downloaded \texttt{config.json}). ``fp16'' is the weight memory only.}
+\label{tab:models}
+\centering\footnotesize
+\begin{tabular}{lrrrllp{3.6cm}}
+\hline
+Model & Params & Context & fp16 & License & Fits 6\,GB LoRA? & Decision \\
+\hline
+Qwen2.5-0.5B-Instruct & 0.49\,B & 32\,768 & 1.0\,GB & Apache-2.0 & yes & \textbf{draft model} (same tokenizer as the 1.5B) \\
+Qwen2.5-1.5B-Instruct & 1.54\,B & 32\,768 & 3.1\,GB & Apache-2.0 & yes (3.9\,GB peak) & \textbf{selected target} \\
+Llama-3.2-1B-Instruct~\cite{meta2024llama32} & 1.24\,B & 131\,072 & 2.5\,GB & Llama 3.2 community & yes & not used: gated download, restrictive license, no smaller same-tokenizer draft \\
+Gemma-2-2B-it~\cite{gemma2024gemma2} & 2.6\,B & 8\,192 & 5.2\,GB & Gemma terms & no (weights alone fill VRAM) & rejected: memory \\
+Qwen2.5-3B-Instruct & 3.09\,B & 32\,768 & 6.2\,GB & Qwen research & no & rejected: memory, license \\
+Phi-3-mini-4k~\cite{abdin2024phi3} & 3.8\,B & 4\,096 & 7.6\,GB & MIT & no & rejected: memory \\
+\hline
+\end{tabular}
+\end{table*}
+
+We selected \textbf{Qwen2.5-1.5B-Instruct}~\cite{qwen2024qwen25}: 28 Transformer layers, hidden size 1536, 12 query heads and 2 key/value heads (grouped-query attention, head size 128), SwiGLU feed-forward size 8960, rotary position embeddings ($\theta=10^6$), RMSNorm, tied input/output embeddings, a 151\,936-token BPE vocabulary and a 32\,768-token context window; 1\,543\,714\,304 parameters, Apache-2.0 license. Because only 2 KV heads are cached, the KV cache costs $2\cdot 28\cdot 2\cdot 128\cdot 2\,\text{B}=28\,672$\,B (28\,KiB) per token in fp16, so even the longest prompt (555 tokens) needs only 15.5\,MiB of cache. For speculative decoding we use \textbf{Qwen2.5-0.5B-Instruct} as draft (494\,032\,768 parameters, 24 layers, hidden size 896, 14 query heads, 2 KV heads); we verified programmatically that its vocabulary is identical to the target's, which is required for token-level verification. We did not train the other candidates, so the choice rests on the resource analysis above and not on an empirical comparison; we state this as a limitation.
+
+\subsection{Input/Output Format and Tokenization}
+Each example is rendered with the model's chat template. The user message contains the patient note with its sentence IDs, the criterion type, the criterion text and the list of allowed labels for that type; the system message states that the model may use only the note. The target answer is a one-line JSON object, e.g. \texttt{\{"label": "included", "evidence": [0, 2]\}}, followed by the end-of-turn token. Only the answer tokens contribute to the loss. A tolerant parser (\texttt{src/prompts.py}) extracts the label and sentence IDs; a label outside the allowed set for the criterion type, or an unparsable output, is counted as an \emph{invalid} prediction and is never silently mapped to a class. Cited IDs outside the note are discarded.
+
+\textbf{Truncation.} Using the Qwen tokenizer, prompts have a mean of 272 tokens (training) and a maximum of 555 tokens; the answer averages 14 tokens (maximum 37). With a 1024-token cap, \emph{no example in any split is truncated}, so no patient evidence is lost (\texttt{results/token\_stats.json}).
+
+\subsection{Fine-Tuning}
+We fine-tune with LoRA~\cite{hu2022lora} on all seven linear projections of every layer (query, key, value, output, gate, up, down) with rank $r=16$, $\alpha=32$ and dropout 0.05, giving 18\,464\,768 trainable parameters (1.18\,\% of the model). The frozen base is kept in fp16, the LoRA weights in fp32, with fp16 autocast, gradient checkpointing and a gradient scaler. We use AdamW (no weight decay), peak learning rate $2\times10^{-4}$ with 5\,\% linear warm-up and cosine decay, gradient clipping at 1.0, micro-batch 4 with 4 accumulation steps (effective batch 16) and seed 42. The objective is next-token cross-entropy on the answer tokens. A 152k-way logit tensor for a whole batch does not fit in 6\,GB, so the training code runs the Transformer body, selects only the hidden states that predict answer tokens (about 14 per example) and applies the output layer there; this yields exactly the same loss with a small fraction of the memory (our first attempt with full logits stalled at 5.9\,GiB). The validation loss is computed after every epoch and the adapter with the lowest validation loss is kept. As a second configuration we add \emph{class-balanced oversampling} of the training split: every (type, label) group is repeated $\text{round}\bigl(\sqrt{n_\text{max}/n}\bigr)$ times to counter the dominance of \emph{not excluded} and NEI.
+
+\subsection{KV-Cached Autoregressive Decoding}
+\label{sec:kvmethod}
+Two greedy decoders are implemented around the same weights (\texttt{src/kv\_decode.py}). The \emph{reference} decoder re-runs the model on the whole sequence for every generated token. The \emph{cache-aware} decoder prefills the prompt once while a \texttt{DynamicCache} that we create collects the keys and values of all 28 layers, and then feeds only the newest token at each step. We pass the cache, the absolute \texttt{position\_ids}/\texttt{cache\_position} (equal to the number of cached tokens) and an all-ones attention mask of length $\text{cache}+1$ ourselves:
+\begin{itemize}
+\item \emph{Positional handling.} Qwen2.5 uses rotary embeddings, which rotate queries and keys by an angle proportional to their absolute position. Keys are stored \emph{after} rotation, so a cached key never needs to be recomputed, but the new token must be rotated with its true position; giving it position~0 would silently corrupt the output.
+\item \emph{Masking.} During prefill the model applies the lower-triangular causal mask. In a decode step the single query is the last position, so it may attend to every cached key and no explicit triangular mask is required; the attention mask only marks valid (non-padding) positions.
+\item \emph{Cache growth.} Each step appends one key and one value vector per layer and KV head, so the cache grows linearly by 28\,KiB per token for this model and decode attention costs $O(n)$ per step instead of re-processing the whole prefix ($O(n)$ tokens through all layers).
+\item \emph{Numerical differences.} Cached and uncached passes sum the same terms in a different order and with different matrix shapes (a $1\times n$ product versus an $n\times n$ product), so logits agree only up to floating-point rounding. A greedy token can change only if the two best logits are closer than this rounding error; we measure the logit differences and top-1/top-2 margins in Section~\ref{sec:kvres}.
+\end{itemize}
+
+\subsection{Tiled Attention with Online Softmax}
+\label{sec:attmethod}
+For queries $Q\in\mathbb{R}^{L_q\times d}$ and keys/values $K,V\in\mathbb{R}^{L_k\times d}$ the reference implementation computes $S=QK^\top/\sqrt d$, applies the causal mask, subtracts the row maximum for numerical stability and returns $\mathrm{softmax}(S)V$. For $L_q<L_k$ (decoding with a cache) causality is bottom-right aligned: query $i$ may attend to key $j$ iff $j\le i+(L_k-L_q)$.
+
+The tiled version (\texttt{src/attention.py}) processes $Q$ in blocks of $B_q$ rows and sweeps over blocks of $B_k$ keys while keeping, for every query row, a running maximum $m$, a running normaliser $\ell$ and a running unnormalised output $o$. For a new score tile $S_t$ with row maximum $\tilde m$:
+\begin{align}
+m' &= \max(m,\tilde m), \quad \alpha=e^{m-m'}, \quad P=e^{S_t-m'},\\
+\ell' &= \alpha\,\ell+\textstyle\sum_j P_{\cdot j}, \qquad o' = \alpha\,o + P\,V_t,
+\end{align}
+and the final output is $o/\ell$. This equals exact softmax attention (no approximation) while only a $B_q\times B_k$ tile of scores exists at any time; accumulators are kept in float32. Key blocks that lie entirely above the causal diagonal are skipped, and rows that have seen only masked keys keep $m=-\infty$ and are guarded against $\infty-\infty$.
+
+\subsection{Greedy Speculative Decoding}
+\label{sec:specmethod}
+The implementation (\texttt{src/speculative.py}) maintains the invariant that both models' caches contain the first $c$ tokens of the sequence and that the last token \texttt{last} is not yet cached. One round consists of:
+\begin{enumerate}
+\item \textbf{Draft.} The draft model greedily proposes $k$ tokens $d_1..d_k$ one at a time, extending its own cache.
+\item \textbf{Verify.} The target processes $[\texttt{last},d_1,\dots,d_k]$ in \emph{one} forward pass and produces its greedy choice $p_i$ after each position.
+\item \textbf{Accept.} Let $m$ be the length of the longest prefix with $d_{i+1}=p_i$. We emit $d_1..d_m$ and then $p_m$: the target's \emph{correction} for the first rejected token if $m<k$, or a free \emph{bonus} token if $m=k$. Each round therefore yields between 1 and $k+1$ tokens, all of them target-greedy tokens.
+\item \textbf{Synchronise.} The target cache holds $c+k+1$ positions but only the first $c+m+1$ are valid, so it is cropped to $c+m+1$; the draft cache is cropped likewise, and if $m=k$ the draft first consumes $d_k$, which it proposed but never fed. The new \texttt{last} is $p_m$.
+\end{enumerate}
+We report the acceptance rate (accepted draft tokens / drafted tokens), the mean number of tokens per target forward pass, wall-clock time, throughput and peak memory, and verify token equality with plain cached greedy decoding and with the Hugging Face assisted-generation API (used only as a reference test).
+
+\subsection{Application Workflow}
+The Gradio application (\texttt{app/app.py}) takes a patient note (numbered sentences are kept; free text is split into sentences automatically), an optional trial title, and inclusion and exclusion criteria (one per line). Inputs are validated (empty or too short note, no criteria, more than 30 criteria, overlong criteria, notes above 1500 tokens) and errors are shown instead of crashing. The user selects the inference mode (no cache, KV cache or speculative decoding with draft length $k$); for each criterion the model returns a label and sentence IDs, and the application shows the label, the cited IDs, the exact sentence text and a template explanation that quotes only the cited sentences (for NEI it states that the note does not settle the question). The trial-level outcome is an explicit rule-based aggregation, not a learned or ground-truth label: any \emph{not included} or \emph{excluded} criterion gives ``likely not eligible''; otherwise any NEI or invalid criterion gives ``undetermined''; otherwise ``likely eligible''. A live benchmark tab runs the three decoders on the user's input, and the report (HTML) records the model, adapter, decoding mode and timestamp. A prominent notice states that the system is an educational prototype, not a clinical enrollment decision.
