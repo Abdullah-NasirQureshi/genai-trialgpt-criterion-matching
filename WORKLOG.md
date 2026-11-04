@@ -57,3 +57,6 @@
     majority class) and never predicts "not enough information" / "not applicable"; it also misses all "not included".
 20. **Trying one fix: class-balanced training** (`--balance`: repeat rare labels, e.g. "excluded" x6). Trained on train
     only, judged on validation only, 2 epochs (run `lora_bal`). The test set is still untouched.
+21. Wrote `src/error_analysis.py`: picks diverse mistakes (false certainty, missed information, flipped polarity,
+    unsupported answers, wrong evidence) and prints them with the patient sentences quoted. I will run it on the
+    TEST predictions at the end and write the explanations by hand in the paper.
