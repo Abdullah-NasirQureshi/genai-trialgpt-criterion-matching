@@ -1,0 +1,49 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\graphicspath{{figs/}}
+
+\begin{document}
+
+\title{Criterion-Level Clinical Trial Eligibility Matching with a Fine-Tuned Small Transformer: KV-Cached, Tiled-Attention and Speculative Inference on a 6\,GB GPU}
+
+% TODO(author): replace with your real name, student ID, affiliation and email before submission.
+\author{\IEEEauthorblockN{Abdullah Naveed}
+\IEEEauthorblockA{\textit{Department of Computer Science}\
+\textit{[University name]}\
+[Student ID] --- abubaknaveed@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+We study whether a small open-weight decoder-only Transformer can match patient descriptions to individual clinical-trial inclusion and exclusion criteria, cite the supporting patient sentences, and run on a 6\,GB laptop GPU. Using only the TrialGPT Criterion Annotations dataset with a fixed patient-grouped 37/8/8 split, we fine-tune Qwen2.5-1.5B-Instruct with LoRA to output an eligibility label from eight expert categories together with evidence sentence IDs. In addition to the supervised model we implement, test and benchmark three inference mechanisms from scratch: key/value-cached greedy decoding, exact tiled attention with online softmax, and greedy speculative decoding with a fine-tuned 0.5B draft model, and we integrate them in a browser application that produces an exportable screening report. We report before/after fine-tuning results, per-class and per-criterion-type metrics, evidence retrieval scores, an error analysis, and measured latency, throughput and memory, including cases where the optimisation does not help. The system is an educational screening prototype and not a clinical enrollment decision tool.
+\end{abstract}
+
+\begin{IEEEkeywords}
+clinical trial matching, large language models, LoRA, KV cache, online softmax attention, speculative decoding
+\end{IEEEkeywords}
+
+\input{sec_intro_related}
+\input{sec_methods}
+\input{sec_setup}
+\input{sec_results}
+\input{sec_limits_conclusion}
+
+\section*{Reproducibility and Availability}
+Source code, split manifest, scripts, benchmark logs and instructions: \url{https://github.com/Abdullah-NasirQureshi/genai-trialgpt-criterion-matching}. The LoRA adapters are distributed as a GitHub release asset of that repository. Demonstration video: [TODO(author): insert video link].
+
+\section*{Acknowledgment}
+The dataset and original system are by the TrialGPT authors~\cite{jin2024trialgpt}; models are from the Qwen team~\cite{qwen2024qwen25}.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\appendix[Use of AI Assistants]
+\input{sec_appendix_ai}
+
+\end{document}

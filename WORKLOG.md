@@ -65,3 +65,8 @@
     prompt format, LoRA setup, KV-cache, tiled attention equations, speculative algorithm, app workflow). Architecture
     numbers (layers, heads, KV bytes per token) were read from the real config files. Results sections come after the
     experiments finish.
+23. **No LaTeX compiler on this PC.** I tried to download a portable one (Tectonic); Claude Code's permission check
+    blocked running a downloaded program, so I did not do it. The paper stays as `.tex` source in `paper/` -- upload
+    the `paper/` folder to Overleaf (it compiles with the IEEEtran class, which Overleaf has) to get the PDF.
+    I will check the .tex files for syntax mistakes with my own script instead. `main.tex` has TODO markers for your
+    name, university, student ID, video link.
