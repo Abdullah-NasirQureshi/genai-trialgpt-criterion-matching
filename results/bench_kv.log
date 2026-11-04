@@ -1,0 +1,22 @@
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+{'model': 'finetuned-1.5B', 'prompt_len': 32, 'new_tokens': 16, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 47, 'expected_cache_len': 47, 'cache_MiB': 1.29}
+{'model': 'finetuned-1.5B', 'prompt_len': 128, 'new_tokens': 64, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 191, 'expected_cache_len': 191, 'cache_MiB': 5.22}
+{'model': 'finetuned-1.5B', 'prompt_len': 256, 'new_tokens': 128, 'identical': False, 'first_mismatch': 44, 'n_mismatch': 78, 'cache_len_final': 383, 'expected_cache_len': 383, 'cache_MiB': 10.47}
+{'model': 'finetuned-1.5B', 'prompt_len': 512, 'new_tokens': 64, 'identical': False, 'first_mismatch': 25, 'n_mismatch': 39, 'cache_len_final': 575, 'expected_cache_len': 575, 'cache_MiB': 15.72}
+{'model': 'finetuned-1.5B', 'prompt_len': 700, 'new_tokens': 32, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 731, 'expected_cache_len': 731, 'cache_MiB': 19.99}
+{'model': 'finetuned-1.5B', 'mode': 'no_cache', 'prompt_len': 128, 'new_tokens': 32, 'repeats': 3, 'prefill_ms': 115.6, 'decode_ms': 4928.6, 'decode_tok_per_s': 6.29, 'total_tok_per_s': 6.34, 'peak_mem_MiB': 2964.0}
+{'model': 'finetuned-1.5B', 'mode': 'kv_cache', 'prompt_len': 128, 'new_tokens': 32, 'repeats': 3, 'prefill_ms': 116.3, 'decode_ms': 2234.0, 'decode_tok_per_s': 13.88, 'total_tok_per_s': 13.62, 'peak_mem_MiB': 2966.0}
+{'model': 'finetuned-1.5B', 'mode': 'no_cache', 'prompt_len': 128, 'new_tokens': 128, 'repeats': 3, 'prefill_ms': 115.8, 'decode_ms': 22536.4, 'decode_tok_per_s': 5.64, 'total_tok_per_s': 5.65, 'peak_mem_MiB': 2970.0}
+{'model': 'finetuned-1.5B', 'mode': 'kv_cache', 'prompt_len': 128, 'new_tokens': 128, 'repeats': 3, 'prefill_ms': 117.9, 'decode_ms': 9374.0, 'decode_tok_per_s': 13.55, 'total_tok_per_s': 13.49, 'peak_mem_MiB': 2966.0}
+{'model': 'finetuned-1.5B', 'mode': 'no_cache', 'prompt_len': 512, 'new_tokens': 32, 'repeats': 3, 'prefill_ms': 376.3, 'decode_ms': 13155.0, 'decode_tok_per_s': 2.36, 'total_tok_per_s': 2.36, 'peak_mem_MiB': 2989.0}
+{'model': 'finetuned-1.5B', 'mode': 'kv_cache', 'prompt_len': 512, 'new_tokens': 32, 'repeats': 3, 'prefill_ms': 376.1, 'decode_ms': 1882.9, 'decode_tok_per_s': 16.46, 'total_tok_per_s': 14.17, 'peak_mem_MiB': 3001.0}
+{'model': 'finetuned-1.5B', 'mode': 'no_cache', 'prompt_len': 512, 'new_tokens': 128, 'repeats': 3, 'prefill_ms': 376.1, 'decode_ms': 55974.4, 'decode_tok_per_s': 2.27, 'total_tok_per_s': 2.27, 'peak_mem_MiB': 2995.0}
+{'model': 'finetuned-1.5B', 'mode': 'kv_cache', 'prompt_len': 512, 'new_tokens': 128, 'repeats': 3, 'prefill_ms': 376.2, 'decode_ms': 7927.5, 'decode_tok_per_s': 16.02, 'total_tok_per_s': 15.41, 'peak_mem_MiB': 3001.0}
+{'model': 'base-0.5B', 'dtype': 'float32', 'prompt_len': 256, 'steps': 64, 'max_abs_logit_diff': 3.24249267578125e-05, 'mean_abs_logit_diff': 3.012114348166506e-06, 'argmax_agreement': 1.0, 'min_top1_top2_margin': 0.021368026733398438}
+{'model': 'base-0.5B-fp32', 'prompt_len': 32, 'new_tokens': 16, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 47, 'expected_cache_len': 47, 'cache_MiB': 1.1}
+{'model': 'base-0.5B-fp32', 'prompt_len': 128, 'new_tokens': 64, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 191, 'expected_cache_len': 191, 'cache_MiB': 4.48}
+{'model': 'base-0.5B-fp32', 'prompt_len': 256, 'new_tokens': 128, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 383, 'expected_cache_len': 383, 'cache_MiB': 8.98}
+{'model': 'base-0.5B-fp32', 'prompt_len': 512, 'new_tokens': 64, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 575, 'expected_cache_len': 575, 'cache_MiB': 13.48}
+{'model': 'base-0.5B-fp32', 'prompt_len': 700, 'new_tokens': 32, 'identical': True, 'first_mismatch': -1, 'n_mismatch': 0, 'cache_len_final': 731, 'expected_cache_len': 731, 'cache_MiB': 17.13}
+{'model': 'base-0.5B', 'dtype': 'float16', 'prompt_len': 256, 'steps': 64, 'max_abs_logit_diff': 0.056640625, 'mean_abs_logit_diff': 0.005310520529747009, 'argmax_agreement': 1.0, 'min_top1_top2_margin': 0.0234375}
+DONE

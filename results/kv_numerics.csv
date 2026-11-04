@@ -1,0 +1,4 @@
+model,dtype,prompt_len,steps,max_abs_logit_diff,mean_abs_logit_diff,argmax_agreement,min_top1_top2_margin
+finetuned-1.5B,float16,256,64,0.0390625,0.004507449455559254,0.984375,0.0
+base-0.5B,float32,256,64,3.24249267578125e-05,3.012114348166506e-06,1.0,0.021368026733398438
+base-0.5B,float16,256,64,0.056640625,0.005310520529747009,1.0,0.0234375

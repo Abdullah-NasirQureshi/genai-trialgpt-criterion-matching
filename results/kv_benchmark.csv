@@ -1,0 +1,9 @@
+model,mode,prompt_len,new_tokens,repeats,prefill_ms,decode_ms,decode_tok_per_s,total_tok_per_s,peak_mem_MiB
+finetuned-1.5B,no_cache,128,32,3,115.6,4928.6,6.29,6.34,2964.0
+finetuned-1.5B,kv_cache,128,32,3,116.3,2234.0,13.88,13.62,2966.0
+finetuned-1.5B,no_cache,128,128,3,115.8,22536.4,5.64,5.65,2970.0
+finetuned-1.5B,kv_cache,128,128,3,117.9,9374.0,13.55,13.49,2966.0
+finetuned-1.5B,no_cache,512,32,3,376.3,13155.0,2.36,2.36,2989.0
+finetuned-1.5B,kv_cache,512,32,3,376.1,1882.9,16.46,14.17,3001.0
+finetuned-1.5B,no_cache,512,128,3,376.1,55974.4,2.27,2.27,2995.0
+finetuned-1.5B,kv_cache,512,128,3,376.2,7927.5,16.02,15.41,3001.0

@@ -1,0 +1,11 @@
+model,prompt_len,new_tokens,identical,first_mismatch,n_mismatch,cache_len_final,expected_cache_len,cache_MiB
+finetuned-1.5B,32,16,True,-1,0,47,47,1.29
+finetuned-1.5B,128,64,True,-1,0,191,191,5.22
+finetuned-1.5B,256,128,False,44,78,383,383,10.47
+finetuned-1.5B,512,64,False,25,39,575,575,15.72
+finetuned-1.5B,700,32,True,-1,0,731,731,19.99
+base-0.5B-fp32,32,16,True,-1,0,47,47,1.1
+base-0.5B-fp32,128,64,True,-1,0,191,191,4.48
+base-0.5B-fp32,256,128,True,-1,0,383,383,8.98
+base-0.5B-fp32,512,64,True,-1,0,575,575,13.48
+base-0.5B-fp32,700,32,True,-1,0,731,731,17.13

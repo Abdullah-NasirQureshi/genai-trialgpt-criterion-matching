@@ -78,3 +78,11 @@
     VALIDATION only (copied to `results/lora_final/`). Test set still untouched.
 26. Started fine-tuning the small 0.5B **draft** model with the same recipe (it will agree with the big model more often
     than the untuned draft, which is what speculative decoding needs).
+27. **Draft model fine-tuned** (0.5B, balanced, 2 epochs, 11 min, only 1.5 GB GPU; val loss 0.1536).
+28. **KV-cache tests and benchmark done** (`results/kv_*.csv`).
+    * Speed: with the cache the 1.5B model decodes ~13.6-16 tokens/s; without it only 5.6-6.3 (128-token prompt) and
+      2.3 (512-token prompt) -> 2.2x to 7x faster. Memory is the same (~3.0 GB, the cache only adds 5-20 MiB).
+    * Correctness: in fp32 (0.5B model) cached and uncached output are **identical at all 5 length settings** (logits differ by
+      only 3e-5). In fp16 two of five settings diverge after ~25-44 tokens; I traced this to rounding: the two top
+      logits are sometimes exactly tied in fp16 (smallest gap 0.0), so the tiny numeric difference between the two
+      code paths can flip the greedy choice. Not a bug.
