@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import matplotlib
+import matplotlib.ticker
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,6 +25,10 @@ def read_csv(p):
     return list(csv.DictReader(open(p, encoding="utf-8")))
 
 
+NICE = {"lora_r16": "1.5B LoRA, 3 epochs", "lora_bal": "1.5B LoRA balanced, 2 epochs (final)",
+        "lora_draft": "0.5B draft, balanced, 2 epochs"}
+
+
 def training_curves(run="lora_final_src"):
     runs = [d for d in R.iterdir() if d.is_dir() and (d / "train_log.csv").exists() and d.name.startswith("lora_") and d.name != "lora_final"]
     if not runs:
@@ -34,12 +39,12 @@ def training_curves(run="lora_final_src"):
         tr = [(float(r["step"]), float(r["train_loss"])) for r in rows if r["train_loss"]]
         va = [(float(r["step"]), float(r["val_loss"])) for r in rows if r["val_loss"]]
         if tr:
-            ax[0].plot(*zip(*tr), label=d.name)
+            ax[0].plot(*zip(*tr), label=NICE.get(d.name, d.name))
         if va:
-            ax[1].plot(*zip(*va), marker="o", label=d.name)
+            ax[1].plot(*zip(*va), marker="o", label=NICE.get(d.name, d.name))
     ax[0].set(xlabel="optimizer step", ylabel="train loss (answer tokens)", title="Training loss", yscale="log")
     ax[1].set(xlabel="optimizer step", ylabel="validation loss", title="Validation loss (epoch ends)")
-    ax[0].legend(); ax[1].legend()
+    ax[0].legend(fontsize=6); ax[1].legend(fontsize=6)
     save(fig, "training_curves")
 
 
@@ -74,8 +79,9 @@ def kv_bench():
         for j, mode in enumerate(("no_cache", "kv_cache")):
             v = [float(next(r for r in rows if r["mode"] == mode and (int(r["prompt_len"]), int(r["new_tokens"])) == c)[metric]) for c in cfgs]
             ax[k].bar(x + (j - 0.5) * w, v, w, label=mode)
-        ax[k].set_xticks(x); ax[k].set_xticklabels([f"{p}+{n}" for p, n in cfgs]); ax[k].set(ylabel=lab, xlabel="prompt+new tokens")
-    ax[0].legend(); save(fig, "kv_benchmark")
+        ax[k].set_xticks(x); ax[k].set_xticklabels([f"{p}+{n}" for p, n in cfgs], rotation=35, ha="right"); ax[k].set(ylabel=lab, xlabel="prompt + new tokens")
+        ax[k].set_ylim(0, ax[k].get_ylim()[1] * (1.3 if k == 0 else 1.05))
+    ax[0].legend(fontsize=7, loc="upper left"); save(fig, "kv_benchmark")
 
 
 def attention_bench():
@@ -91,6 +97,8 @@ def attention_bench():
         ax[1].plot(L, [float(r["peak_extra_MiB"]) for r in rs], marker="o", label=impl)
     for a, yl in zip(ax, ("median time (ms)", "peak extra memory (MiB)")):
         a.set(xscale="log", yscale="log", xlabel="sequence length", ylabel=yl)
+        a.set_xticks([256, 512, 1024, 2048, 4096]); a.set_xticklabels(["256", "512", "1024", "2048", "4096"])
+        a.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax[0].legend(); save(fig, "attention_benchmark")
 
 
@@ -100,15 +108,21 @@ def spec_bench():
         return
     rows = read_csv(p)
     works = sorted({r["workload"] for r in rows})
-    fig, ax = plt.subplots(1, len(works), figsize=(7, 2.6), squeeze=False)
+    titles = {"long_free_generation(N=128,no EOS)": "long free generation (128 tokens)",
+              "task_answers(EOS stop,N=48)": "task answers (stop at EOS)"}
+    fig, ax = plt.subplots(1, len(works), figsize=(7.2, 2.7), squeeze=False)
     for a, w in zip(ax[0], works):
         rs = [r for r in rows if r["workload"] == w and r["method"] == "speculative"]
         ks = [int(r["k"]) for r in rs]
-        a.plot(ks, [float(r["speedup"]) for r in rs], marker="o", label="speedup vs greedy-KV")
+        l1, = a.plot(ks, [float(r["speedup"]) for r in rs], marker="o", color="C0", label="speedup (left axis)")
         a.axhline(1.0, color="k", ls="--", lw=0.8)
+        a.set_ylim(0.5, 1.1)
         a2 = a.twinx(); a2.grid(False)
-        a2.plot(ks, [float(r["acceptance_rate"]) for r in rs], marker="s", color="C1", label="acceptance rate")
-        a.set(xlabel="draft length k", ylabel="speedup", title=w[:28]); a2.set(ylabel="acceptance")
+        l2, = a2.plot(ks, [float(r["acceptance_rate"]) for r in rs], marker="s", color="C1", label="acceptance rate (right axis)")
+        a2.set_ylim(0.5, 1.0)
+        a.set(xlabel="draft length k", ylabel="speedup vs plain KV decoding", title=titles.get(w, w), xticks=ks)
+        a2.set_ylabel("draft acceptance rate")
+        a.legend(handles=[l1, l2], fontsize=6, loc="lower left")
     save(fig, "spec_benchmark")
 
 
