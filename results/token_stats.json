@@ -1,0 +1,37 @@
+{
+  "max_len_cap": 1024,
+  "context_window_model": 32768,
+  "tokenizers_identical_vocab": true,
+  "splits": {
+    "train": {
+      "n": 603,
+      "prompt_tokens_mean": 271.5389718076285,
+      "prompt_tokens_p95": 438.0,
+      "prompt_tokens_max": 555,
+      "note_tokens_max": 372,
+      "target_tokens_mean": 14.393034825870647,
+      "target_tokens_max": 37,
+      "examples_exceeding_cap": 0
+    },
+    "val": {
+      "n": 206,
+      "prompt_tokens_mean": 284.81067961165047,
+      "prompt_tokens_p95": 334.75,
+      "prompt_tokens_max": 393,
+      "note_tokens_max": 204,
+      "target_tokens_mean": 13.888349514563107,
+      "target_tokens_max": 24,
+      "examples_exceeding_cap": 0
+    },
+    "test": {
+      "n": 206,
+      "prompt_tokens_mean": 255.0873786407767,
+      "prompt_tokens_p95": 318.75,
+      "prompt_tokens_max": 459,
+      "note_tokens_max": 172,
+      "target_tokens_mean": 13.966019417475728,
+      "target_tokens_max": 27,
+      "examples_exceeding_cap": 0
+    }
+  }
+}
