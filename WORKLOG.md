@@ -86,3 +86,8 @@
       only 3e-5). In fp16 two of five settings diverge after ~25-44 tokens; I traced this to rounding: the two top
       logits are sometimes exactly tied in fp16 (smallest gap 0.0), so the tiny numeric difference between the two
       code paths can flip the greedy choice. Not a bug.
+29. **Speculative decoding tests and benchmark done** (`results/spec_*_final.csv`). Output is **identical to normal greedy
+    decoding in every test** (12/12 task prompts for k=2,4,6,8; 4/4 long generations; and identical to Hugging Face's own
+    assisted generation on 6/6). The fine-tuned draft is accepted 90-95% of the time at small k (62-84% on long free
+    text), giving up to 7 tokens per big-model pass. But overall it is **slower** (0.71-0.82x of normal cached decoding):
+    on this laptop GPU the 0.5B draft is almost as slow per token as the 1.5B model, so drafting costs too much.

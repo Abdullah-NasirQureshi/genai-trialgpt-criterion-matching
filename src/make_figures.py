@@ -25,7 +25,7 @@ def read_csv(p):
 
 
 def training_curves(run="lora_final_src"):
-    runs = [d for d in R.iterdir() if d.is_dir() and (d / "train_log.csv").exists() and d.name.startswith("lora_")]
+    runs = [d for d in R.iterdir() if d.is_dir() and (d / "train_log.csv").exists() and d.name.startswith("lora_") and d.name != "lora_final"]
     if not runs:
         return
     fig, ax = plt.subplots(1, 2, figsize=(7, 2.6))

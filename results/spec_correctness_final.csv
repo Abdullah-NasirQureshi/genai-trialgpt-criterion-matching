@@ -1,0 +1,9 @@
+tag,workload,k,prompts,identical,identical_frac,first_mismatch_positions
+final,"task_answers(EOS stop,N=48)",2,12,12,1.0,[]
+final,"task_answers(EOS stop,N=48)",4,12,12,1.0,[]
+final,"task_answers(EOS stop,N=48)",6,12,12,1.0,[]
+final,"task_answers(EOS stop,N=48)",8,12,12,1.0,[]
+final,"long_free_generation(N=128,no EOS)",2,4,4,1.0,[]
+final,"long_free_generation(N=128,no EOS)",4,4,4,1.0,[]
+final,"long_free_generation(N=128,no EOS)",8,4,4,1.0,[]
+final,HF assisted_generation reference,4,6,6,1.0,
