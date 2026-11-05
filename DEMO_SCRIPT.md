@@ -37,10 +37,19 @@ Pregnancy
 Active malignancy
 Estimated GFR below 30 mL/min
 ```
-Expected behaviour (check before recording; wording of results may differ slightly): the two inclusion criteria should be
-*included* with evidence; pregnancy should be *not applicable*; active malignancy and GFR are not mentioned in the
-note -> the correct answer is *not enough information*. If the model says *not excluded* for them, say so openly in the video: that is
-exactly the weakness described in the paper's error analysis (cases 1-3) - it shows you understand the limitation.
+**What the final model actually returned (tested, KV-cache mode, greedy - the output is deterministic):**
+
+| Criterion | Decision | Evidence | Comment |
+|---|---|---|---|
+| Heart failure with reduced EF (incl.) | included | 0, 2 | correct |
+| ACE inhibitor or ARB (incl.) | included | 3 | correct |
+| Pregnancy (excl.) | not applicable | - | correct for a 67-year-old |
+| Active malignancy (excl.) | **not excluded** | - | note never mentions cancer, so "not enough information" would be the right answer: this is the known weakness |
+| Estimated GFR < 30 (excl.) | not enough information | - | correct |
+
+Overall outcome shown: **UNDETERMINED - more information needed (preliminary)** (because of the GFR row). In the video, point at the
+"Active malignancy" row and say openly that this is exactly the failure described in the paper's error analysis (cases 1-3): the model
+treats silence as "not excluded", which is why the app says "check whether the note is complete". Being honest here shows you understand the limitation.
 
 ## Checklist
 - [ ] Disclaimer visible at the top of the app at least once
