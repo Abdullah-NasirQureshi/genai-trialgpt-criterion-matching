@@ -1,0 +1,10 @@
+tag,workload,method,k,prompts,tokens,seconds,tok_per_s,speedup,acceptance_rate,tokens_per_target_forward,peak_mem_MiB
+basedraft,"task_answers(EOS stop,N=48)",greedy_kv,0,12,193,17.498,11.03,1.0,,,3945
+basedraft,"task_answers(EOS stop,N=48)",speculative,2,12,193,27.632,6.98,0.633,0.667,2.33,4037
+basedraft,"task_answers(EOS stop,N=48)",speculative,4,12,193,29.919,6.45,0.585,0.623,3.49,4037
+basedraft,"task_answers(EOS stop,N=48)",speculative,6,12,193,30.848,6.26,0.567,0.644,4.87,4037
+basedraft,"task_answers(EOS stop,N=48)",speculative,8,12,193,35.992,5.36,0.486,0.483,4.87,4037
+basedraft,"long_free_generation(N=128,no EOS)",greedy_kv,0,4,512,40.577,12.62,1.0,,,3920
+basedraft,"long_free_generation(N=128,no EOS)",speculative,2,4,512,48.848,10.48,0.831,0.872,2.74,3949
+basedraft,"long_free_generation(N=128,no EOS)",speculative,4,4,512,46.773,10.95,0.868,0.81,4.16,3949
+basedraft,"long_free_generation(N=128,no EOS)",speculative,8,4,512,49.595,10.32,0.818,0.655,6.14,3949

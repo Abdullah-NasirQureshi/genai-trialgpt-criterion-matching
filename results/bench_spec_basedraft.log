@@ -1,0 +1,163 @@
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'method': 'greedy_kv', 'k': 0, 'prompts': 12, 'tokens': 193, 'seconds': 17.498, 'tok_per_s': 11.03, 'speedup': 1.0, 'acceptance_rate': '', 'tokens_per_target_forward': '', 'peak_mem_MiB': 3945}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'k': 2, 'prompts': 12, 'identical': 12, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'method': 'speculative', 'k': 2, 'prompts': 12, 'tokens': 193, 'seconds': 27.632, 'tok_per_s': 6.98, 'speedup': 0.633, 'acceptance_rate': 0.667, 'tokens_per_target_forward': 2.33, 'peak_mem_MiB': 4037}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'k': 4, 'prompts': 12, 'identical': 12, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'method': 'speculative', 'k': 4, 'prompts': 12, 'tokens': 193, 'seconds': 29.919, 'tok_per_s': 6.45, 'speedup': 0.585, 'acceptance_rate': 0.623, 'tokens_per_target_forward': 3.49, 'peak_mem_MiB': 4037}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'k': 6, 'prompts': 12, 'identical': 12, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'method': 'speculative', 'k': 6, 'prompts': 12, 'tokens': 193, 'seconds': 30.848, 'tok_per_s': 6.26, 'speedup': 0.567, 'acceptance_rate': 0.644, 'tokens_per_target_forward': 4.87, 'peak_mem_MiB': 4037}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'k': 8, 'prompts': 12, 'identical': 12, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'task_answers(EOS stop,N=48)', 'method': 'speculative', 'k': 8, 'prompts': 12, 'tokens': 193, 'seconds': 35.992, 'tok_per_s': 5.36, 'speedup': 0.486, 'acceptance_rate': 0.483, 'tokens_per_target_forward': 4.87, 'peak_mem_MiB': 4037}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'method': 'greedy_kv', 'k': 0, 'prompts': 4, 'tokens': 512, 'seconds': 40.577, 'tok_per_s': 12.62, 'speedup': 1.0, 'acceptance_rate': '', 'tokens_per_target_forward': '', 'peak_mem_MiB': 3920}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'k': 2, 'prompts': 4, 'identical': 4, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'method': 'speculative', 'k': 2, 'prompts': 4, 'tokens': 512, 'seconds': 48.848, 'tok_per_s': 10.48, 'speedup': 0.831, 'acceptance_rate': 0.872, 'tokens_per_target_forward': 2.74, 'peak_mem_MiB': 3949}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'k': 4, 'prompts': 4, 'identical': 4, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'method': 'speculative', 'k': 4, 'prompts': 4, 'tokens': 512, 'seconds': 46.773, 'tok_per_s': 10.95, 'speedup': 0.868, 'acceptance_rate': 0.81, 'tokens_per_target_forward': 4.16, 'peak_mem_MiB': 3949}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'k': 8, 'prompts': 4, 'identical': 4, 'identical_frac': 1.0, 'first_mismatch_positions': '[]'}
+{'tag': 'basedraft', 'workload': 'long_free_generation(N=128,no EOS)', 'method': 'speculative', 'k': 8, 'prompts': 4, 'tokens': 512, 'seconds': 49.595, 'tok_per_s': 10.32, 'speedup': 0.818, 'acceptance_rate': 0.655, 'tokens_per_target_forward': 6.14, 'peak_mem_MiB': 3949}
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:629: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.7` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:634: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.8` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+E:\Uni Stuff\Semester_07\Gen-AI\Assignment-2\.venv\Lib\site-packages\transformers\generation\configuration_utils.py:651: UserWarning: `do_sample` is set to `False`. However, `top_k` is set to `20` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_k`.
+  warnings.warn(
+{'tag': 'basedraft', 'workload': 'HF assisted_generation reference', 'k': 4, 'prompts': 6, 'identical': 6, 'identical_frac': 1.0, 'first_mismatch_positions': ''}
+DONE
