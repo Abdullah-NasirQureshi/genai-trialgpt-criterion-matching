@@ -11,3 +11,4 @@ scikit-learn
 pandas
 numpy
 matplotlib
+playwright   # optional: only for src/make_screenshots.py (drives the installed Chrome)

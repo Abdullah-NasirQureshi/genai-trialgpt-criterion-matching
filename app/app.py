@@ -60,8 +60,8 @@ def load_models():
     draft, da = mk(SMALL, DRAFT_ADAPTER)
     _STATE.update(tok=tok, target=target, draft=draft, target_adapter=ta, draft_adapter=da,
                   eos=tok.convert_tokens_to_ids("<|im_end|>"))
-    return (f"Loaded in {time.time() - t0:.0f}s. Target: {Path(BIG).name} + adapter: {ta}. "
-            f"Draft: {Path(SMALL).name} + adapter: {da}.")
+    return (f"Loaded in {time.time() - t0:.0f}s. Target: {Path(BIG).name} + adapter: {short(ta)}. "
+            f"Draft: {Path(SMALL).name} + adapter: {short(da)}.")
 
 
 # ----------------------------------------------------------------------------- inference

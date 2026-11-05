@@ -125,3 +125,32 @@
     design-decisions table to the paper (alternatives, evidence, difficulties) and wrote `DEMO_SCRIPT.md` (minute-by-minute
     plan for the 5-7 min video, with an unseen test note) and `DEFENSE_NOTES.md` (short answers + where each thing is in code).
     I cannot record the video or fill in your name/university -- see the TODO list at the end of this file.
+37. **Untuned-draft comparison finished** (`results/spec_*_basedraft.csv`): output identical to greedy again; on the TASK the
+    fine-tuned draft is clearly better (acceptance 0.90 vs 0.62 at k=4), but on free text (not the fine-tuning task) the
+    untuned draft is as good or slightly better. The same plain-greedy baseline measured 13.8 vs 12.6 tokens/s in the two
+    runs (~9% noise). I wrote this into the paper instead of claiming "fine-tuned draft is always better".
+38. **Checked the demo example with the real model** (`results/demo_probe.py`): both inclusion criteria correct with right
+    evidence; pregnancy "not applicable" (correct); GFR "not enough information" (correct); "active malignancy" (not in
+    note) -> "not excluded" = the known weakness. `DEMO_SCRIPT.md` now shows the real outputs.
+39. **More app screenshots** with Playwright driving the installed Chrome (`src/make_screenshots.py`): after a run, live
+    benchmark tab, invalid input + recovery. Also removed my local file path from the app's status line. Added to the
+    paper as three more figures. App test (18 checks) and both LaTeX checkers still pass.
+
+---------------------------------------------------------------------------------------------------
+# WHAT IS LEFT FOR YOU (I cannot do these) -- deadline Nov 10, 2026 (+2 hour grace)
+1. **Make the GitHub repo public** (it is private now): GitHub -> repo -> Settings -> Danger zone -> Change visibility,
+   or: `gh repo edit Abdullah-NasirQureshi/genai-trialgpt-criterion-matching --visibility public --accept-visibility-change-consequences`.
+   Graders must be able to open it. (After that the release download works without login.)
+2. **Compile the paper:** upload the whole `paper/` folder to Overleaf (main file `main.tex`, IEEEtran is built in) and
+   download the PDF. I could not compile locally (no LaTeX; downloading one was blocked). If Overleaf reports an error,
+   it is most likely a small typo -- the two checker scripts passed, but they are not a real compiler.
+3. **Fill in your details** in `paper/main.tex`: search `TODO(author)` -> your name, university, student ID, email; the
+   demo-video link (section "Reproducibility and Availability"); review the AI-use appendix (`paper/sec_appendix_ai.tex`)
+   so it describes your own use of AI honestly.
+4. **Record the 5-7 minute demo video** following `DEMO_SCRIPT.md` (it has the exact inputs and expected outputs) and upload it.
+5. **Practise the defense** with `DEFENSE_NOTES.md`; run the app once yourself (`python app/app.py`), and re-run
+   `python src/test_app.py` if you change anything. Be ready to change a component live (table in the notes).
+6. **Submit on Google Classroom:** report PDF, GitHub URL, adapter link
+   (https://github.com/Abdullah-NasirQureshi/genai-trialgpt-criterion-matching/releases/tag/v1.0), the video link, and mention the
+   split manifest (`data/split_manifest.json`) and benchmark logs (`results/`).
+7. Optional: `git pull`/`git push` -- the local repo and GitHub are in sync as of the last commit.

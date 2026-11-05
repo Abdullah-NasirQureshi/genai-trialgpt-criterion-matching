@@ -336,7 +336,7 @@ $k$ & Target 1-tok ms & Verify ($k+1$) ms & Draft 1-tok ms & $c$ & Predicted & M
 \end{table}
 
 \subsection{Application}
-Figure~\ref{fig:app} shows the browser interface (Gradio, started with \texttt{python app/app.py}; models load on the first run, in about 13\,s). The user enters a patient note, inclusion and exclusion criteria, chooses the inference mode (no cache, KV cache, speculative with draft length $k$) and runs the screening. Figure~\ref{fig:report} shows the exported report for the built-in example: for each criterion it lists the decision, the cited sentence IDs with their exact text, a template explanation that quotes only those sentences, the rule-based overall outcome, the patient note as screened, and the provenance (model, adapter, decoding mode), together with the educational-prototype disclaimer. For labels without a cited sentence the explanation states that the absence of evidence is not proof, as in the last row of the figure. A second tab runs the three decoders on the user's own input and reports time, tokens/s, peak memory and token equality (on the example: 5.1 versus 12.5 versus 8.8 tokens/s for no cache, KV cache and speculative decoding, all producing identical tokens); a third tab shows the saved benchmark tables. An automated test (\texttt{src/test\_app.py}, 18 checks) verifies that empty or too short notes, missing criteria, more than 30 criteria and overlong criteria are rejected with a message, that the three modes return identical decisions, that every cited evidence text is the exact note sentence, and that the report contains the disclaimer and provenance but no local file paths; the same request also succeeds through the web API.
+Figure~\ref{fig:app} shows the browser interface (Gradio, started with \texttt{python app/app.py}; models load on the first run, in about 13\,s). The user enters a patient note, inclusion and exclusion criteria, chooses the inference mode (no cache, KV cache, speculative with draft length $k$) and runs the screening. After a run (Fig.~\ref{fig:appresults}) the page shows the rule-based overall outcome, the list of criteria with missing or unclear information, the model status (the loaded model and adapters), the downloadable report and a table with one row per criterion containing the decision, the cited sentence IDs, the exact evidence text, the explanation, the time and the raw model output. Figure~\ref{fig:report} shows the exported report for the built-in example: for each criterion it lists the decision, the cited sentence IDs with their exact text, a template explanation that quotes only those sentences, the rule-based overall outcome, the patient note as screened, and the provenance (model, adapter, decoding mode), together with the educational-prototype disclaimer. For labels without a cited sentence the explanation states that the absence of evidence is not proof, as in the last row of the figure. A second tab runs the three decoders on the user's own input and reports time, tokens/s, peak memory and token equality (Fig.~\ref{fig:appbench}: 4.95, 11.43 and 9.08 tokens/s for no cache, KV cache and speculative decoding on the example, all producing identical tokens, in line with Tables~\ref{tab:kvbench} and~\ref{tab:spec}); a third tab shows the saved benchmark tables. Invalid input does not crash the application: Fig.~\ref{fig:appinvalid} shows the message for an empty note, after which the user simply corrects the field and runs again (the automated test and the recorded screenshot session both completed this recovery). An automated test (\texttt{src/test\_app.py}, 18 checks) verifies that empty or too short notes, missing criteria, more than 30 criteria and overlong criteria are rejected with a message, that the three modes return identical decisions, that every cited evidence text is the exact note sentence, and that the report contains the disclaimer and provenance but no local file paths; the same request also succeeds through the web API.
 
 \begin{figure}[t]
 \centering
@@ -350,4 +350,25 @@ Figure~\ref{fig:app} shows the browser interface (Gradio, started with \texttt{p
 \includegraphics[width=\columnwidth]{app_report}
 \caption{Exported screening report for the built-in example: criterion-level decisions with exact evidence, rule-based overall outcome, patient note and provenance, and the disclaimer. The unsupported \emph{not excluded} decision in the last row carries an explicit warning.}
 \label{fig:report}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{app_results}
+\caption{The application after clicking \emph{Run screening} on the built-in example: overall preliminary outcome, missing-information list, model status, report download and the criterion-level table.}
+\label{fig:appresults}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{app_benchmark}
+\caption{The live inference-benchmark tab after a run: time, tokens/s, peak GPU memory and token equality for the three decoding modes on the user's input.}
+\label{fig:appbench}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{app_invalid}
+\caption{Input validation: with an empty patient note the application shows an ``Input problem'' message instead of running the model.}
+\label{fig:appinvalid}
 \end{figure}
