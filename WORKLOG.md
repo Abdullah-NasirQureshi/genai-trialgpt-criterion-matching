@@ -166,3 +166,6 @@
 43. **Claim made true:** the paper's appendix says metric/parse/split checks are automated in the repo -> added `src/test_units.py`
     (23 checks, all pass).
 44. **References verified online:** TrialGPT = Nature Communications 15, 9074 (2024); dataset on Hugging Face has the 1015 expert pairs.
+45. **Author details filled in** (paper/main.tex): Abdullah Nasir, Department of Computer Science, FAST-NUCES Islamabad, 23I-0726,
+    i230726@isb.nu.edu.pk. AI-use appendix approved by the author (TODO comment removed). Fixed the author-block line breaks.
+    ONLY placeholder left: the demo-video link (`[TODO(author): insert video link]` in paper/main.tex).
