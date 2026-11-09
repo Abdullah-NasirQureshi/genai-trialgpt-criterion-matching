@@ -1,7 +1,7 @@
 # Demo video script (target 6 minutes, limit 5-7)
 
 Record your screen with voice (OBS, Xbox Game Bar `Win+G`, or Zoom). Upload to YouTube (unlisted) or Drive and paste the
-link into `paper/main.tex` (search `TODO(author): insert video link`) and into the Classroom submission.
+link into `paper/main.tex` (search `TODO(author): paste YouTube link here` (author block, top of the first page)) and into the Classroom submission.
 
 **Before recording:** `cd` to the project, activate `.venv`, run `python app/app.py`, open http://127.0.0.1:7860.
 Close other GPU programs. Do one dry run first so the models are already loaded (first click takes ~15 s).
