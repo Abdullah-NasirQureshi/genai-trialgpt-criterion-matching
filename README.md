@@ -46,7 +46,12 @@ The adapters are attached to the GitHub release of this repository (`adapters.zi
 results/lora_final/adapter/   # target model adapter (1.5B)
 results/lora_draft/adapter/   # draft model adapter (0.5B)
 ```
-Or retrain them (steps below). With `gh`: `gh release download --pattern adapters.zip && unzip adapters.zip -d results`.
+Or retrain them (steps below). Download with `gh` (inside this repo) and unzip with Python (works on every OS):
+```bash
+gh release download v1.0 --pattern adapters.zip
+python -m zipfile -e adapters.zip results
+```
+(Or open the release page in a browser, download `adapters.zip` and extract it into `results/`.)
 
 ## 2. Start the application (no notebook / IDE needed)
 ```bash
@@ -69,8 +74,10 @@ python src/token_stats.py                          # token lengths / truncation 
 python src/eval_model.py --split val --tag base_zeroshot            # "before" fine-tuning (validation)
 python src/train_lora.py --run lora_r16 --epochs 3                  # LoRA run 1
 python src/train_lora.py --run lora_bal --epochs 2 --balance        # LoRA run 2 (class-balanced)
-python src/train_lora.py --model models/Qwen2.5-0.5B-Instruct --run lora_draft --epochs 3   # draft model
+python src/train_lora.py --model models/Qwen2.5-0.5B-Instruct --run lora_draft --epochs 2 --balance   # draft model (saved to results/lora_draft/adapter)
 python src/eval_model.py --split val --adapter results/<run>/adapter --tag <run>
+# the final adapter is the run with the best VALIDATION macro-F1 (lora_bal: 0.534 vs 0.467); copy it into place:
+python -c "import shutil; shutil.copytree('results/lora_bal/adapter', 'results/lora_final/adapter')"
 # final, ONCE, after choosing the adapter on validation:
 python src/eval_model.py --split test --allow-test --tag base_zeroshot
 python src/eval_model.py --split test --allow-test --adapter results/lora_final/adapter --tag lora_final
@@ -93,6 +100,10 @@ python src/make_figures.py                         # figures for the paper
 | `src/attention.py`, `src/test_attention.py` | Task 4: reference vs tiled online-softmax attention |
 | `src/speculative.py`, `src/bench_spec.py` | Task 5: greedy speculative decoding |
 | `app/app.py` | Task 6: browser application |
+| `src/test_units.py`, `src/test_app.py` | fast CPU unit tests (metrics, parser, split integrity) / application test (needs GPU, 18 checks) |
+| `src/make_figures.py`, `src/make_diagrams.py`, `src/make_screenshots.py` | paper figures, architecture diagrams, app screenshots |
+| `src/check_tex.py`, `src/check_tex_chars.py` | LaTeX sanity checks (no TeX install needed) |
+| `DEMO_SCRIPT.md`, `DEFENSE_NOTES.md`, `WORKLOG.md` | video plan, defense notes, step-by-step log of everything done |
 | `results/` | logs, metrics JSON, per-example predictions, benchmark CSVs |
 | `paper/` | IEEE LaTeX report (`main.tex`; compile with `pdflatex`/`bibtex` or on Overleaf) |
 

@@ -154,3 +154,15 @@
    (https://github.com/Abdullah-NasirQureshi/genai-trialgpt-criterion-matching/releases/tag/v1.0), the video link, and mention the
    split manifest (`data/split_manifest.json`) and benchmark logs (`results/`).
 7. Optional: `git pull`/`git push` -- the local repo and GitHub are in sync as of the last commit.
+
+## Nov 10 -- full audit against the assignment text (found and fixed)
+40. **Missing in the paper: architecture diagrams.** The assignment lists "architecture diagrams" under Materials and Methods and I
+    had none. Added 4 (`src/make_diagrams.py`): system/application workflow, decoder + KV cache (prefill vs decode),
+    tiled online-softmax attention, one round of speculative decoding with cache sync. Each is referenced in the text.
+41. **Reproducibility bugs fixed:** `results/dl_curl.sh` failed on a fresh clone (folders did not exist); README did not say how
+    `results/lora_final/adapter` is made (copy of `lora_bal`); README draft command said 3 epochs but I trained 2 epochs with `--balance`;
+    `unzip` replaced by a Python command that works on Windows.
+42. **Small factual fix:** cache for a 555-token prompt is 15.2 MiB (paper said 15.5).
+43. **Claim made true:** the paper's appendix says metric/parse/split checks are automated in the repo -> added `src/test_units.py`
+    (23 checks, all pass).
+44. **References verified online:** TrialGPT = Nature Communications 15, 9074 (2024); dataset on Hugging Face has the 1015 expert pairs.

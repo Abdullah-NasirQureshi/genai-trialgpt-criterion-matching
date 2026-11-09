@@ -51,7 +51,7 @@ Phi-3-mini-4k~\cite{abdin2024phi3} & 3.8\,B & 4\,096 & 7.6\,GB & MIT & no & reje
 \end{tabular}
 \end{table*}
 
-We selected \textbf{Qwen2.5-1.5B-Instruct}~\cite{qwen2024qwen25}: 28 Transformer layers, hidden size 1536, 12 query heads and 2 key/value heads (grouped-query attention, head size 128), SwiGLU feed-forward size 8960, rotary position embeddings ($\theta=10^6$), RMSNorm, tied input/output embeddings, a 151\,936-token BPE vocabulary and a 32\,768-token context window; 1\,543\,714\,304 parameters, Apache-2.0 license. Because only 2 KV heads are cached, the KV cache costs $2\cdot 28\cdot 2\cdot 128\cdot 2\,\text{B}=28\,672$\,B (28\,KiB) per token in fp16, so even the longest prompt (555 tokens) needs only 15.5\,MiB of cache. For speculative decoding we use \textbf{Qwen2.5-0.5B-Instruct} as draft (494\,032\,768 parameters, 24 layers, hidden size 896, 14 query heads, 2 KV heads); we verified programmatically that its vocabulary is identical to the target's, which is required for token-level verification. We did not train the other candidates, so the choice rests on the resource analysis above and not on an empirical comparison; we state this as a limitation.
+We selected \textbf{Qwen2.5-1.5B-Instruct}~\cite{qwen2024qwen25}: 28 Transformer layers, hidden size 1536, 12 query heads and 2 key/value heads (grouped-query attention, head size 128), SwiGLU feed-forward size 8960, rotary position embeddings ($\theta=10^6$), RMSNorm, tied input/output embeddings, a 151\,936-token BPE vocabulary and a 32\,768-token context window; 1\,543\,714\,304 parameters, Apache-2.0 license. Because only 2 KV heads are cached, the KV cache costs $2\cdot 28\cdot 2\cdot 128\cdot 2\,\text{B}=28\,672$\,B (28\,KiB) per token in fp16, so even the longest prompt (555 tokens) needs only 15.2\,MiB of cache. For speculative decoding we use \textbf{Qwen2.5-0.5B-Instruct} as draft (494\,032\,768 parameters, 24 layers, hidden size 896, 14 query heads, 2 KV heads); we verified programmatically that its vocabulary is identical to the target's, which is required for token-level verification. We did not train the other candidates, so the choice rests on the resource analysis above and not on an empirical comparison; we state this as a limitation.
 
 \subsection{Input/Output Format and Tokenization}
 Each example is rendered with the model's chat template. The user message contains the patient note with its sentence IDs, the criterion type, the criterion text and the list of allowed labels for that type; the system message states that the model may use only the note. The target answer is a one-line JSON object, e.g. \texttt{\{"label": "included", "evidence": [0, 2]\}}, followed by the end-of-turn token. Only the answer tokens contribute to the loss. A tolerant parser (\texttt{src/prompts.py}) extracts the label and sentence IDs; a label outside the allowed set for the criterion type, or an unparsable output, is counted as an \emph{invalid} prediction and is never silently mapped to a class. Cited IDs outside the note are discarded.
@@ -63,6 +63,15 @@ We fine-tune with LoRA~\cite{hu2022lora} on all seven linear projections of ever
 
 \subsection{KV-Cached Autoregressive Decoding}
 \label{sec:kvmethod}
+Figure~\ref{fig:kvdiag} shows the architecture of the decoder (28 identical blocks of RMS normalisation, grouped-query self-attention with rotary embeddings, and a SwiGLU feed-forward network) and the difference between the two phases that the cache creates: in the prefill phase the whole prompt is processed once and its keys and values are written into the cache of every layer; in each decode step only the newest token is processed and its keys and values are appended.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{arch_kvcache}
+\caption{Decoder-only Transformer (Qwen2.5-1.5B) with an explicit KV cache. (a) Prefill: all $P$ prompt tokens are processed together under a causal mask and every layer stores its keys and values. (b) Decode step: only the newest token enters, with its absolute position used for the rotary embedding; its keys and values are appended to the cache and it attends to all cached keys.}
+\label{fig:kvdiag}
+\end{figure*}
+
 Two greedy decoders are implemented around the same weights (\texttt{src/kv\_decode.py}). The \emph{reference} decoder re-runs the model on the whole sequence for every generated token. The \emph{cache-aware} decoder prefills the prompt once while a \texttt{DynamicCache} that we create collects the keys and values of all 28 layers, and then feeds only the newest token at each step. We pass the cache, the absolute \texttt{position\_ids}/\texttt{cache\_position} (equal to the number of cached tokens) and an all-ones attention mask of length $\text{cache}+1$ ourselves:
 \begin{itemize}
 \item \emph{Positional handling.} Qwen2.5 uses rotary embeddings, which rotate queries and keys by an angle proportional to their absolute position. Keys are stored \emph{after} rotation, so a cached key never needs to be recomputed, but the new token must be rotated with its true position; giving it position~0 would silently corrupt the output.
@@ -73,6 +82,15 @@ Two greedy decoders are implemented around the same weights (\texttt{src/kv\_dec
 
 \subsection{Tiled Attention with Online Softmax}
 \label{sec:attmethod}
+Figure~\ref{fig:tileddiag} illustrates the blocking scheme and the running statistics that are updated for every key block.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{arch_tiled}
+\caption{Tiled attention with online softmax. The score matrix is split into query blocks (rows) and key/value blocks (columns); blocks above the causal diagonal are skipped and only one score tile exists at a time. For each query block the running maximum $m$, normaliser $\ell$ and unnormalised output $o$ are rescaled and updated as in Eqs.~(1)--(2) below, and the output is $o/\ell$.}
+\label{fig:tileddiag}
+\end{figure*}
+
 For queries $Q\in\mathbb{R}^{L_q\times d}$ and keys/values $K,V\in\mathbb{R}^{L_k\times d}$ the reference implementation computes $S=QK^\top/\sqrt d$, applies the causal mask, subtracts the row maximum for numerical stability and returns $\mathrm{softmax}(S)V$. For $L_q<L_k$ (decoding with a cache) causality is bottom-right aligned: query $i$ may attend to key $j$ iff $j\le i+(L_k-L_q)$.
 
 The tiled version (\texttt{src/attention.py}) processes $Q$ in blocks of $B_q$ rows and sweeps over blocks of $B_k$ keys while keeping, for every query row, a running maximum $m$, a running normaliser $\ell$ and a running unnormalised output $o$. For a new score tile $S_t$ with row maximum $\tilde m$:
@@ -84,6 +102,15 @@ and the final output is $o/\ell$. This equals exact softmax attention (no approx
 
 \subsection{Greedy Speculative Decoding}
 \label{sec:specmethod}
+Figure~\ref{fig:specdiag} summarises one round of the algorithm, including the three possible outcomes of the acceptance step and the resulting cache operations.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{arch_spec}
+\caption{One round of greedy speculative decoding with $k=3$. The draft proposes tokens, the target verifies all of them in one pass, the longest matching prefix is accepted, and the target's own next token is appended (a correction after a mismatch or a bonus token after a full match). Both caches are then brought back to the same length $c+m+1$.}
+\label{fig:specdiag}
+\end{figure*}
+
 The implementation (\texttt{src/speculative.py}) maintains the invariant that both models' caches contain the first $c$ tokens of the sequence and that the last token \texttt{last} is not yet cached. One round consists of:
 \begin{enumerate}
 \item \textbf{Draft.} The draft model greedily proposes $k$ tokens $d_1..d_k$ one at a time, extending its own cache.
@@ -94,4 +121,13 @@ The implementation (\texttt{src/speculative.py}) maintains the invariant that bo
 We report the acceptance rate (accepted draft tokens / drafted tokens), the mean number of tokens per target forward pass, wall-clock time, throughput and peak memory, and verify token equality with plain cached greedy decoding and with the Hugging Face assisted-generation API (used only as a reference test).
 
 \subsection{Application Workflow}
+Figure~\ref{fig:arch} gives an overview of the complete system. Every criterion is turned into a separate prompt, answered by the (adapter-merged) target model with the selected decoding mode, parsed, linked back to the exact patient sentences and finally aggregated; the selected inference mode (no cache, KV cache or speculative decoding) changes only the generation step and, in our tests, not the decisions (fp16 rounding could in principle flip a near-tied token, Section~\ref{sec:kvres}).
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{arch_overview}
+\caption{System architecture and application workflow. User inputs (left) are validated and turned into one prompt per criterion; the fine-tuned Qwen2.5-1.5B model (with the 0.5B draft used only in speculative mode) generates a JSON answer that is parsed and linked to the exact evidence sentences; a rule-based aggregation and an HTML report complete the workflow.}
+\label{fig:arch}
+\end{figure*}
+
 The Gradio application (\texttt{app/app.py}) takes a patient note (numbered sentences are kept; free text is split into sentences automatically), an optional trial title, and inclusion and exclusion criteria (one per line). Inputs are validated (empty or too short note, no criteria, more than 30 criteria, overlong criteria, notes above 1500 tokens) and errors are shown instead of crashing. The user selects the inference mode (no cache, KV cache or speculative decoding with draft length $k$); for each criterion the model returns a label and sentence IDs, and the application shows the label, the cited IDs, the exact sentence text and a template explanation that quotes only the cited sentences (for NEI it states that the note does not settle the question). The trial-level outcome is an explicit rule-based aggregation, not a learned or ground-truth label: any \emph{not included} or \emph{excluded} criterion gives ``likely not eligible''; otherwise any NEI or invalid criterion gives ``undetermined''; otherwise ``likely eligible''. A live benchmark tab runs the three decoders on the user's input, and the report (HTML) records the model, adapter, decoding mode and timestamp. A prominent notice states that the system is an educational prototype, not a clinical enrollment decision.
